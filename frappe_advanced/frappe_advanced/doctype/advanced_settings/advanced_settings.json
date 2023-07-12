@@ -6,37 +6,42 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-    "account_transfer_days_limit",
-    "parent_account",
-    "exclude_account_numbers"
-   ],
+  "account_transfer_days_limit",
+  "column_break_dlrqu",
+  "write_off_limit",
+  "parent_account",
+  "exclude_account_numbers"
+ ],
  "fields": [
-    {
-     "default": "2",
-     "description": "Number of days before inserting a warning if the account amount was not transferred to main account",
-     "fieldname": "account_transfer_days_limit",
-     "fieldtype": "Int",
-     "label": "Account Transfer Days Limit"
-    },
-    {
-     "description": "The parent account group to use when filtering the accounts that you want to check if their balance was transferred.",
-     "fetch_from": "mode_of_payment_account.default_account",
-     "fieldname": "parent_account",
-     "fieldtype": "Link",
-     "label": "Parent Account (Filter value)",
-     "options": "Account"
-    },
-    {
-     "description": "The account numbers of the accounts that you want to exclude when checking if the account balance is transferred.\n<br>\nYou can just enter the Parent account number of child accounts instead of entering the child account numbers one by one.\n<br>\nExample: 1111,1120,1130",
-     "fieldname": "exclude_account_numbers",
-     "fieldtype": "Data",
-     "label": "Account Numbers to Exclude in Filter"
-    }
-   ],
+  {
+   "default": "2",
+   "description": "Number of days before inserting a warning if the account amount was not transferred to main account",
+   "fieldname": "account_transfer_days_limit",
+   "fieldtype": "Int",
+   "label": "Account Transfer Days Limit"
+  },
+  {
+   "description": "The account numbers of the accounts that you want to exclude when checking if the account balance is transferred.\n<br>\n<br>\nExample: 1111,1120,1130",
+   "fieldname": "exclude_account_numbers",
+   "fieldtype": "Data",
+   "label": "Account Numbers to Exclude in Filter"
+  },
+  {
+   "fieldname": "column_break_dlrqu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "20",
+   "fieldname": "write_off_limit",
+   "fieldtype": "Currency",
+   "label": "Write Off Limit",
+   "precision": "2"
+  }
+ ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-07-12 10:52:20.445855",
+ "modified": "2023-07-12 12:57:20.785632",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Advanced Settings",

@@ -194,3 +194,42 @@ user_data_fields = [
 #	"frappe_advanced.auth.validate"
 # ]
 
+fixtures = [
+    {
+        "doctype": "Custom Field",
+        "filters": [
+            
+            [
+                "name",
+                "in",
+                (
+                    "Letter Head-branch",
+                    "Account-branch",
+                    "Employee-default_in_transit_warehouse",
+                    "Employee-default_warehouse",
+                    "Property Setter-dont_replace",
+                    "Payment Entry-note_count",
+                ),
+            ]
+        ]
+    },
+    {
+        "doctype": "Property Setter",
+        "filters": [
+            
+            [
+                "name",
+                "in",
+                (
+                    "Payment Entry-payment_type-default",
+                    "Payment Entry-naming_series-default",
+                    "Payment Entry-naming_series-options",
+                    "Stock Entry-stock_entry_type-default",
+                ),
+            ]
+        ]
+    }
+]
+
+import frappe_advanced.frappe_advanced.overrides.meta as meta
+meta.load_batches()

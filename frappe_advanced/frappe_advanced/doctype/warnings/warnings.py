@@ -25,6 +25,6 @@ def insert_warning(warning_type,employee=None,
 				account_amount_transferred=account_amount_transferred,
 				write_off_limit=write_off_limit,
 				write_off_amount_inserted=write_off_amount_inserted)
-	warning.flags.ignore_validate = True
-	warning.save(ignore_permissions=True)
+	warning.insert(ignore_permissions=True)
+	frappe.db.commit()
 	return warning
