@@ -4,7 +4,6 @@ from frappe import _
 from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry
 from frappe_advanced.frappe_advanced.doctype.warnings.warnings import insert_warning
 from frappe.utils.user import get_user_fullname
-from datetime import datetime
 
 class CustomPaymentEntry(PaymentEntry):
 	def validate(self):
@@ -45,15 +44,18 @@ class CustomPaymentEntry(PaymentEntry):
                                 {'name':self.paid_from},
                                 ['branch'])
 				employee = get_user_fullname(frappe.session.user)
-				last_warning = frappe.db.get_value('Warnings',
+				last_warning = frappe.db.exists('Warnings',
                                                        {'warning_type':'Write-Off Limit Exceeded',
-                                                        'date':self.posting_date,
-                                                        'account_name':self.paid_from},
-                                                        ['date'])
+                                                        'payment_entry':self.name,
+														'write_off_amount_inserted':total})
+				# frappe.throw(str("exist?: {0}, Name: {1}, Total: {2}".format(
+				# 	last_warning,self.name,total
+				# )))
 				if(not last_warning):
 					warning =  insert_warning(
 												warning_type='Write-Off Limit Exceeded',
 												branch=branch,
+												payment_entry=self.name,
 												account_name=self.paid_from,
 												write_off_limit=write_off_limit,
 												write_off_amount_inserted=total,

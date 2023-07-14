@@ -7,12 +7,18 @@
  "engine": "InnoDB",
  "field_order": [
   "status_",
+  "section_break_xotcw",
   "date",
+  "column_break_d9tuf",
   "time",
+  "section_break_jy6nf",
   "warning_type",
   "employee",
+  "column_break_yjbyu",
   "branch",
+  "section_break_poahv",
   "sales_invoice",
+  "payment_entry",
   "account_name",
   "account_amount",
   "last_transfer_date",
@@ -120,11 +126,37 @@
    "fieldname": "time",
    "fieldtype": "Time",
    "label": "Time"
+  },
+  {
+   "fieldname": "section_break_xotcw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_d9tuf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_jy6nf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_yjbyu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_poahv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "payment_entry",
+   "fieldtype": "Link",
+   "label": "Payment Entry",
+   "options": "Payment Entry"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-14 08:55:39.995355",
+ "modified": "2023-07-14 18:24:34.710600",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Warnings",

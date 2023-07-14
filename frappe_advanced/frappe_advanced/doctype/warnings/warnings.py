@@ -17,6 +17,7 @@ class Warnings(Document):
 @frappe.whitelist()
 def insert_warning(warning_type,employee=None,
 		   branch=None,sales_invoice=None,
+		   payment_entry=None,
 		   account_name=None,account_amount=None,
 		   last_transfer_date=None,account_amount_transferred=None,
 		   write_off_limit=None,write_off_amount_inserted=None):
@@ -25,6 +26,7 @@ def insert_warning(warning_type,employee=None,
 				employee=employee,
 				branch=branch,
 				sales_invoice=sales_invoice,
+				payment_entry=payment_entry,
 				account_name=account_name,
 				account_amount=account_amount,
 				last_transfer_date=last_transfer_date,
