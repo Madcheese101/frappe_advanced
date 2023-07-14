@@ -93,7 +93,7 @@ app_license = "MIT"
 override_doctype_class = {
     # "Quotation": "frappe_advanced.frappe_advanced.overrides.quotation.CustomQuotation",
     # "Employee": "frappe_advanced.frappe_advanced.overrides.employee.CustomEmployee",
-    # "Stock Entry": "frappe_advanced.frappe_advanced.overrides.stock_entry.CustomStockEntry",
+    "Stock Entry": "frappe_advanced.frappe_advanced.overrides.stock_entry.CustomStockEntry",
     "Payment Entry": "frappe_advanced.frappe_advanced.overrides.payment_entry.CustomPaymentEntry"
 }
 
