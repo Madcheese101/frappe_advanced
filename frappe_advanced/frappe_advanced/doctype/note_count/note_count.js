@@ -9,7 +9,7 @@ frappe.ui.form.on('Note Count', {
         }
 	},
 	fives:function(frm) {
-	    if(frm.doc.payment_type.includes("نقدية")){
+	    if(frm.doc.mode_of_payment.includes("نقدية")){
 	       frm.set_value("fives_sum",frm.doc.fives*5);
 	       var total_sum = (frm.doc.fives_sum+
             frm.doc.tens_sum+
@@ -22,7 +22,7 @@ frappe.ui.form.on('Note Count', {
 	    }
     },
     tens:function(frm) {
-	    if(frm.doc.payment_type.includes("نقدية")){
+	    if(frm.doc.mode_of_payment.includes("نقدية")){
 	       frm.set_value("tens_sum",frm.doc.tens*10);
            var total_sum = (frm.doc.fives_sum+
             frm.doc.tens_sum+
@@ -35,7 +35,7 @@ frappe.ui.form.on('Note Count', {
 	    }
     },
     twenties:function(frm) {
-	    if(frm.doc.payment_type.includes("نقدية")){
+	    if(frm.doc.mode_of_payment.includes("نقدية")){
 	       frm.set_value("twenties_sum",frm.doc.twenties*20);
 	       var total_sum = (frm.doc.fives_sum+
             frm.doc.tens_sum+
@@ -48,7 +48,7 @@ frappe.ui.form.on('Note Count', {
 	    }
     },
     fifties:function(frm) {
-	    if(frm.doc.payment_type.includes("نقدية")){
+	    if(frm.doc.mode_of_payment.includes("نقدية")){
 	       frm.set_value("fifties_sum",frm.doc.fifties*50);
 	       var total_sum = (frm.doc.fives_sum+
             frm.doc.tens_sum+
@@ -60,7 +60,7 @@ frappe.ui.form.on('Note Count', {
 	       frm.set_value("total_field",total_sum);
 	    }
     },
-    payment_type:function(frm) {
+    mode_of_payment:function(frm) {
         frm.set_value("total_field",0);
         frm.set_value("fives",0);
         frm.set_value("tens",0);
@@ -89,7 +89,7 @@ frappe.ui.form.on('Note Count', {
         frm.events.show_hide(frm);
     },
     note_count_amount:function(frm){
-        if(frm.doc.payment_type.includes("نقدية")){
+        if(frm.doc.mode_of_payment.includes("نقدية")){
             var total_sum = (frm.doc.fives_sum+
                 frm.doc.tens_sum+
                 frm.doc.twenties_sum+
@@ -112,7 +112,7 @@ frappe.ui.form.on('Note Count', {
         frm.events.show_hide(frm);
     },
     hq_amount:function(frm) {
-	    if(frm.doc.payment_type.includes("نقدية")){
+	    if(frm.doc.mode_of_payment.includes("نقدية")){
             var total_sum = (frm.doc.fives_sum+
                 frm.doc.tens_sum+
                 frm.doc.twenties_sum+
@@ -124,7 +124,7 @@ frappe.ui.form.on('Note Count', {
 	    }
     },
     lyd_value:function(frm) {
-	    if(frm.doc.payment_type.includes("نقدية")){
+	    if(frm.doc.mode_of_payment.includes("نقدية")){
             var total_sum = (frm.doc.fives_sum+
                 frm.doc.tens_sum+
                 frm.doc.twenties_sum+
@@ -136,7 +136,14 @@ frappe.ui.form.on('Note Count', {
 	    }
     },
     setup: function(frm) {
-        /// replace with user permissions
+        frm.set_query("advanced_note_count", function() {
+            return {
+                filters: [
+                    ["Note Count", "is_advance", "=", 1],
+                    ["Note Count", "type", "=", "Cash"]
+                ]
+            }
+        });
 
 
         // frappe.call({
@@ -152,7 +159,7 @@ frappe.ui.form.on('Note Count', {
         //         if (r.message) {
         //             if (r.message.branch) {
         //                 // msgprint('You are only allowed Material Receipt');
-        //                 frm.set_query("payment_type", function() {
+        //                 frm.set_query("mode_of_payment", function() {
         //     			return {
         //     				filters: [
         //                         ["Mode of Payment", "mode_of_payment", "like", "%"+r.message.branch+"%"]
@@ -166,15 +173,15 @@ frappe.ui.form.on('Note Count', {
 	},
     show_hide:function(frm){
         frm.toggle_display("cash_section", 
-            (frm.doc.payment_type && frm.doc.payment_type.includes("نقد")));
+            (frm.doc.mode_of_payment && frm.doc.mode_of_payment.includes("نقد")));
         frm.toggle_display("credit_section", 
-            (frm.doc.payment_type && frm.doc.payment_type.includes("بطاق")));
+            (frm.doc.mode_of_payment && frm.doc.mode_of_payment.includes("بطاق")));
         frm.toggle_display("cheque_section", 
-            (frm.doc.payment_type && frm.doc.payment_type.includes("صك")));
+            (frm.doc.mode_of_payment && frm.doc.mode_of_payment.includes("صك")));
         frm.toggle_display("foreign_currency_section", 
             (frm.doc.foreign_currency_check));
         frm.toggle_display("extra_options",
-            (frm.doc.payment_type && frm.doc.payment_type.includes("نقد")));
+            (frm.doc.mode_of_payment && frm.doc.mode_of_payment.includes("نقد")));
 
         frm.toggle_display("advanced_note_count", 
             (frm.doc.has_advance_note_count));
@@ -184,7 +191,7 @@ frappe.ui.form.on('Note Count', {
         frm.toggle_display("hq_amount", 
             (frm.doc.hq_recieved));
         frm.toggle_display("has_advance_note_count",
-            (frm.doc.is_advance == false && frm.doc.payment_type.includes("نقد")));
+            (frm.doc.is_advance == false && frm.doc.mode_of_payment.includes("نقد")));
         frm.toggle_display("is_advance",
             (frm.doc.has_advance_note_count == false));
     },
@@ -194,7 +201,7 @@ frappe.ui.form.on('Note Count', {
 
 
 frappe.ui.form.on("Credit List", "credit_amount", function(frm, cdt, cdn){
-    if(frm.doc.payment_type.includes("بطاقة")){
+    if(frm.doc.mode_of_payment.includes("بطاقة")){
         var d = locals[cdt][cdn];
         var total = 0;
         
@@ -204,7 +211,7 @@ frappe.ui.form.on("Credit List", "credit_amount", function(frm, cdt, cdn){
 });
 
 frappe.ui.form.on("Cheque List", "cheque_amount", function(frm, cdt, cdn){
-    if(frm.doc.payment_type.includes("صكوك")){
+    if(frm.doc.mode_of_payment.includes("صكوك")){
         var d = locals[cdt][cdn];
         var total = 0;
         
