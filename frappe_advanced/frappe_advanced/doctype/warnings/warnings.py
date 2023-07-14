@@ -3,11 +3,17 @@
 
 # import frappe
 from frappe.model.document import Document
+from frappe.model.naming import make_autoname
 import frappe
 from frappe import _
 
 class Warnings(Document):
-	pass
+	def autoname(self):
+		# prefix = '{0} - NO:'.format(self.warning_type)
+		# self.name = getseries(prefix, 4)
+		prefix = '{0} - .####'.format(self.warning_type)
+		self.name = make_autoname(prefix)
+
 @frappe.whitelist()
 def insert_warning(warning_type,employee=None,
 		   branch=None,sales_invoice=None,
