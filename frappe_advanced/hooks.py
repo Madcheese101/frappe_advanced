@@ -15,6 +15,10 @@ app_license = "MIT"
 # include js, css files in header of desk.html
 # app_include_css = "/assets/frappe_advanced/css/frappe_advanced.css"
 # app_include_js = "/assets/frappe_advanced/js/frappe_advanced.js"
+app_include_js = [
+	"/assets/js/custom_list.min.js",
+    "/assets/js/custom_form.min.js"
+]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/frappe_advanced/css/frappe_advanced.css"
@@ -29,12 +33,16 @@ app_license = "MIT"
 
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
+page_js = {"print" : "printing/page/print/custom_print.js"}
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
+doctype_js = {"Stock Entry" : "public/js/stock_entry.js",
+              "Quotation" : "public/js/quotation.js",
+              "Payment Entry" : "public/js/payment_entry.js"}
 
 # Home Pages
 # ----------
