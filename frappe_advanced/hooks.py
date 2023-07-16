@@ -101,8 +101,6 @@ doctype_js = {"Stock Entry" : "public/js/stock_entry.js",
 override_doctype_class = {
     # "Quotation": "frappe_advanced.frappe_advanced.overrides.quotation.CustomQuotation",
     # "Employee": "frappe_advanced.frappe_advanced.overrides.employee.CustomEmployee",
-    "Stock Entry": "frappe_advanced.frappe_advanced.overrides.stock_entry.CustomStockEntry",
-    # "Sales Invoice": "frappe_advanced.frappe_advanced.overrides.sales_invoice.CustomSalesInvoice"
 }
 
 # Document Events
@@ -123,6 +121,10 @@ doc_events = {
     "Payment Entry": {
 		"on_submit": "frappe_advanced.crud_events.warning_events.partial_balance_transfer",
         "before_submit": "frappe_advanced.crud_events.warning_events.validate_write_off_limit"
+	},
+    "Stock Entry": {
+		"on_submit": "frappe_advanced.crud_events.events.split_move_batches_on_stock_entry",
+        "before_save": "frappe_advanced.crud_events.events.stock_entry_set_default_from_target"
 	}
 }
 # Scheduled Tasks
