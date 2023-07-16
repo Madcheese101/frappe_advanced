@@ -102,7 +102,8 @@ override_doctype_class = {
     # "Quotation": "frappe_advanced.frappe_advanced.overrides.quotation.CustomQuotation",
     # "Employee": "frappe_advanced.frappe_advanced.overrides.employee.CustomEmployee",
     "Stock Entry": "frappe_advanced.frappe_advanced.overrides.stock_entry.CustomStockEntry",
-    "Payment Entry": "frappe_advanced.frappe_advanced.overrides.payment_entry.CustomPaymentEntry"
+    "Payment Entry": "frappe_advanced.frappe_advanced.overrides.payment_entry.CustomPaymentEntry",
+    # "Sales Invoice": "frappe_advanced.frappe_advanced.overrides.sales_invoice.CustomSalesInvoice"
 }
 
 # Document Events
@@ -116,7 +117,14 @@ override_doctype_class = {
 #		"on_trash": "method"
 #	}
 # }
-
+doc_events = {
+	"Sales Invoice": {
+		"on_cancel": "frappe_advanced.crud_events.warning_events.insert_invoice_warning"
+	},
+    "Payment Entry": {
+		"on_submit": "frappe_advanced.crud_events.warning_events.partial_balance_transfer"
+	}
+}
 # Scheduled Tasks
 # ---------------
 
