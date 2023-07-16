@@ -42,3 +42,31 @@ def partial_balance_transfer(doc, method=None):
                             account_name=doc.paid_from,
                             account_amount=doc.paid_from_account_balance,
                             account_amount_transferred=doc.paid_amount)
+
+# This is called before_submit and not on validation
+# since it requires the document to be saved to
+# fetch its name and add it to the warnings list
+def validate_write_off_limit(doc, method=None):
+		write_off_limit = frappe.db.get_single_value('Advanced Settings', 'write_off_limit')
+
+		if((write_off_limit or write_off_limit != 0 ) and doc.payment_type == 'Internal Transfer'):
+			total = sum(d.amount for d in doc.get("deductions"))
+			if(total > write_off_limit and doc.difference_amount == 0):
+				branch = frappe.db.get_value('Account', 
+                                {'name':doc.paid_from},
+                                ['branch'])
+				employee = get_user_fullname(frappe.session.user)
+				last_warning = frappe.db.exists('Warnings',
+                                                       {'warning_type':'Write-Off Limit Exceeded',
+                                                        'payment_entry':doc.name,
+														'write_off_amount_inserted':total})
+				if(not last_warning):
+					warning =  insert_warning(
+												warning_type='Write-Off Limit Exceeded',
+												branch=branch,
+												payment_entry=doc.name,
+												account_name=doc.paid_from,
+												write_off_limit=write_off_limit,
+												write_off_amount_inserted=total,
+												employee=employee)
+				frappe.throw(_("Write off must be less than or equal to {0} {1}".format(write_off_limit, doc.company_currency)))
