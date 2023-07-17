@@ -51,8 +51,10 @@ def validate_write_off_limit(doc, method=None):
 
     if doc.doctype == "Payment Entry" and not role_check:
         write_off_limit = frappe.db.get_single_value('Advanced Settings', 'write_off_limit')
+        
         if((write_off_limit or write_off_limit != 0 ) and doc.payment_type == 'Internal Transfer'):
             total = sum(d.amount for d in doc.get("deductions"))
+            
             if(total > write_off_limit and doc.difference_amount == 0):
                 branch = frappe.db.get_value('Account', 
                                 {'name':doc.paid_from},
