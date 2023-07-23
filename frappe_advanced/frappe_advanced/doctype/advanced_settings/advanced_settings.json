@@ -9,8 +9,8 @@
   "account_transfer_days_limit",
   "column_break_dlrqu",
   "write_off_limit",
-  "parent_account",
-  "exclude_account_numbers"
+  "exclude_account_numbers",
+  "company_cash_notes"
  ],
  "fields": [
   {
@@ -36,12 +36,18 @@
    "fieldtype": "Currency",
    "label": "Write Off Limit",
    "precision": "2"
+  },
+  {
+   "description": "\u0646\u0648\u0639 \u0641\u0626\u0627\u062a \u0627\u0644\u0646\u0642\u062f\u064a \u0627\u0644\u0645\u0633\u062a\u0639\u0645\u0644\u0629 \u0641\u064a \u0627\u0644\u0634\u0631\u0643\u0629, \u0645\u062b\u0644 5 \u062f\u064a\u0646\u0627\u0631, 10 \u062f\u064a\u0646\u0627\u0631\n<br>\n\u064a\u062c\u0628 \u0627\u062f\u062e\u0627\u0644\u0647\u0627 \u0628\u0627\u0644\u0637\u0631\u064a\u0642\u0629 \u0627\u0644\u0623\u062a\u064a\u0629 \u0645\u062b\u0644:\n<br>\n0.5,1,5,10,20,50,100",
+   "fieldname": "company_cash_notes",
+   "fieldtype": "Data",
+   "label": "Company Cash Notes"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-07-12 12:57:20.785632",
+ "modified": "2023-07-18 22:36:23.064705",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Advanced Settings",
@@ -60,6 +66,7 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1,
  "track_seen": 1,
  "track_views": 1

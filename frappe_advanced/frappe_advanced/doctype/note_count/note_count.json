@@ -8,19 +8,12 @@
  "field_order": [
   "posting_date",
   "mode_of_payment",
-  "type",
+  "payment_type",
   "total_field",
   "is_advance",
+  "is_credit_card",
   "cash_section",
-  "fives",
-  "tens",
-  "twenties",
-  "fifties",
-  "column_break_ec95a",
-  "fives_sum",
-  "tens_sum",
-  "twenties_sum",
-  "fifties_sum",
+  "cash_table",
   "extra_options",
   "hq_recieved",
   "hq_amount",
@@ -63,37 +56,14 @@
    "fieldname": "total_field",
    "fieldtype": "Currency",
    "label": "\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0625\u064a\u062f\u0627\u0639",
-   "precision": "2"
+   "precision": "2",
+   "read_only": 1
   },
   {
    "fieldname": "cash_section",
    "fieldtype": "Section Break",
    "hidden": 1,
    "label": "\u0625\u064a\u062f\u0627\u0639 \u0646\u0642\u062f\u064a"
-  },
-  {
-   "default": "0",
-   "fieldname": "fives",
-   "fieldtype": "Int",
-   "label": "\u0641\u0626\u0629 \u0627\u0644\u062e\u0645\u0633\u0627\u062a"
-  },
-  {
-   "default": "0",
-   "fieldname": "tens",
-   "fieldtype": "Int",
-   "label": "\u0641\u0626\u0629 \u0627\u0644\u0639\u0634\u0631\u0627\u062a"
-  },
-  {
-   "default": "0",
-   "fieldname": "twenties",
-   "fieldtype": "Int",
-   "label": "\u0641\u0626\u0629 \u0627\u0644\u0639\u0634\u0631\u064a\u0646\u0627\u062a"
-  },
-  {
-   "default": "0",
-   "fieldname": "fifties",
-   "fieldtype": "Int",
-   "label": "\u0641\u0626\u0629 \u0627\u0644\u062e\u0645\u0633\u064a\u0646\u0627\u062a"
   },
   {
    "default": "0",
@@ -107,42 +77,6 @@
    "fieldname": "hq_recieved",
    "fieldtype": "Check",
    "label": "\u0645\u0633\u062a\u0644\u0645 \u0639\u0646\u062f \u0627\u0644\u0625\u062f\u0627\u0631\u0629\u061f"
-  },
-  {
-   "fieldname": "column_break_ec95a",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "fives_sum",
-   "fieldtype": "Currency",
-   "label": "\u0642\u064a\u0645\u0629 \u0641\u0626\u0629 \u0627\u0644\u062e\u0645\u0633\u0627\u062a",
-   "precision": "1",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "tens_sum",
-   "fieldtype": "Currency",
-   "label": "\u0642\u064a\u0645\u0629 \u0641\u0626\u0629 \u0627\u0644\u0639\u0634\u0631\u0627\u062a",
-   "precision": "1",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "twenties_sum",
-   "fieldtype": "Currency",
-   "label": "\u0642\u064a\u0645\u0629 \u0641\u0626\u0629 \u0627\u0644\u0639\u0634\u0631\u064a\u0646\u0627\u062a",
-   "precision": "1",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "fifties_sum",
-   "fieldtype": "Currency",
-   "label": "\u0642\u064a\u0645\u0629 \u0641\u0626\u0629 \u0627\u0644\u062e\u0645\u0633\u064a\u0646\u0627\u062a",
-   "precision": "1",
-   "read_only": 1
   },
   {
    "fieldname": "foreign_currency_section",
@@ -173,7 +107,7 @@
   {
    "default": "0",
    "fieldname": "lyd_value",
-   "fieldtype": "Float",
+   "fieldtype": "Currency",
    "label": "\u0627\u0644\u0642\u064a\u0645\u0629 \u0628\u0627\u0644\u062f\u064a\u0646\u0627\u0631",
    "mandatory_depends_on": "eval:doc.foreign_currency_check",
    "precision": "2"
@@ -206,7 +140,7 @@
    "default": "0",
    "depends_on": "eval:doc.hq_recieved",
    "fieldname": "hq_amount",
-   "fieldtype": "Float",
+   "fieldtype": "Currency",
    "label": "\u0627\u0644\u0642\u064a\u0645\u0629 \u0627\u0644\u0645\u0633\u0644\u0645\u0629 \u0644\u0644\u0625\u062f\u0627\u0631\u0629",
    "mandatory_depends_on": "eval:doc.hq_recieved",
    "precision": "2"
@@ -259,8 +193,21 @@
    "options": "Mode of Payment"
   },
   {
+   "fieldname": "cash_table",
+   "fieldtype": "Table",
+   "label": "cash table",
+   "options": "Cash Table"
+  },
+  {
+   "fieldname": "is_credit_card",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "\u0628\u0637\u0627\u0642\u0629\u061f"
+  },
+  {
    "fetch_from": "mode_of_payment.type",
-   "fieldname": "type",
+   "fieldname": "payment_type",
    "fieldtype": "Data",
    "hidden": 1,
    "label": "type",
@@ -272,7 +219,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-07-14 15:14:41.525667",
+ "modified": "2023-07-21 22:06:06.722682",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Note Count",
@@ -288,6 +235,20 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales User",
+   "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],
