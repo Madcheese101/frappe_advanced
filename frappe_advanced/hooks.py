@@ -40,9 +40,6 @@ page_js = {"print" : "printing/page/print/custom_print.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
-doctype_js = {"Stock Entry" : "public/js/stock_entry.js",
-              "Quotation" : "public/js/quotation.js",
-              "Payment Entry" : "public/js/payment_entry.js"}
 
 # Home Pages
 # ----------
@@ -226,26 +223,7 @@ fixtures = [
                 (
                     "Letter Head-branch",
                     "Account-branch",
-                    "Employee-default_in_transit_warehouse",
-                    "Employee-default_warehouse",
-                    "Property Setter-dont_replace",
-                    "Payment Entry-note_count",
-                ),
-            ]
-        ]
-    },
-    {
-        "doctype": "Property Setter",
-        "filters": [
-            
-            [
-                "name",
-                "in",
-                (
-                    "Payment Entry-payment_type-default",
-                    "Payment Entry-naming_series-default",
-                    "Payment Entry-naming_series-options",
-                    "Stock Entry-stock_entry_type-default",
+                    "Property Setter-dont_replace"
                 ),
             ]
         ]
