@@ -6,10 +6,16 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "warnings_settings_section",
+  "account_transfer_limit_warning",
+  "partial_balance_transfer_warning",
   "account_transfer_days_limit",
   "column_break_dlrqu",
+  "write_off_limit_warning",
+  "canceled_sales_invoice_warning",
   "write_off_limit",
   "exclude_account_numbers",
+  "note_count_settings_section",
   "company_cash_notes"
  ],
  "fields": [
@@ -42,12 +48,47 @@
    "fieldname": "company_cash_notes",
    "fieldtype": "Data",
    "label": "Company Cash Notes"
+  },
+  {
+   "fieldname": "warnings_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Warnings Settings"
+  },
+  {
+   "fieldname": "note_count_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Note Count Settings"
+  },
+  {
+   "default": "1",
+   "fieldname": "account_transfer_limit_warning",
+   "fieldtype": "Check",
+   "label": "Account Transfer Limit Warning"
+  },
+  {
+   "default": "1",
+   "fieldname": "write_off_limit_warning",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Write Off Limit Warning"
+  },
+  {
+   "default": "1",
+   "fieldname": "partial_balance_transfer_warning",
+   "fieldtype": "Check",
+   "label": "Partial Balance Transfer Warning"
+  },
+  {
+   "default": "1",
+   "fieldname": "canceled_sales_invoice_warning",
+   "fieldtype": "Check",
+   "label": "Canceled Sales Invoice Warning"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-07-18 22:36:23.064705",
+ "modified": "2023-08-17 20:48:57.332600",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Advanced Settings",
