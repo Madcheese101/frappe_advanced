@@ -6,7 +6,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "status_",
+  "status",
   "section_break_xotcw",
   "date",
   "column_break_d9tuf",
@@ -20,9 +20,9 @@
   "sales_invoice",
   "payment_entry",
   "account_name",
-  "account_amount",
+  "account_balance",
   "last_transfer_date",
-  "account_amount_transferred",
+  "transferred_amount",
   "write_off_limit",
   "write_off_amount_inserted",
   "amended_from"
@@ -31,9 +31,11 @@
   {
    "fieldname": "warning_type",
    "fieldtype": "Select",
-   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Warning Type",
-   "options": "Canceled Sales Invoice\nWrite-Off Limit Exceeded\nAccount not Transferred\nPartial Account Transfer"
+   "options": "Canceled Sales Invoice\nWrite-Off Limit Exceeded\nAccount not Transferred\nPartial Account Transfer",
+   "read_only": 1,
+   "translatable": 1
   },
   {
    "description": "The employee that did the transaction.",
@@ -47,33 +49,31 @@
    "fieldname": "sales_invoice",
    "fieldtype": "Link",
    "label": "Sales Invoice",
-   "options": "Sales Invoice"
+   "options": "Sales Invoice",
+   "read_only": 1
   },
   {
    "fieldname": "account_name",
    "fieldtype": "Link",
    "label": "Account Name",
-   "options": "Account"
-  },
-  {
-   "fieldname": "account_amount",
-   "fieldtype": "Currency",
-   "label": "Account Amount",
-   "precision": "2"
+   "options": "Account",
+   "read_only": 1
   },
   {
    "description": "The Write-off limit set by the Manager in company settings.",
    "fieldname": "write_off_limit",
    "fieldtype": "Currency",
    "label": "Write-Off Limit",
-   "precision": "2"
+   "precision": "2",
+   "read_only": 1
   },
   {
    "description": "The write off amount that exceeded the limit when trying to transfer the account amount by the employee",
    "fieldname": "write_off_amount_inserted",
    "fieldtype": "Currency",
    "label": "Write-Off Amount Inserted",
-   "precision": "2"
+   "precision": "2",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -85,47 +85,33 @@
    "read_only": 1
   },
   {
-   "fieldname": "account_amount_transferred",
-   "fieldtype": "Currency",
-   "label": "Account Amount Transferred",
-   "precision": "2"
-  },
-  {
    "fieldname": "branch",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Branch",
-   "options": "Branch"
+   "options": "Branch",
+   "read_only": 1
   },
   {
    "default": "Today",
    "fieldname": "date",
    "fieldtype": "Date",
-   "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Date"
-  },
-  {
-   "default": "Pending Review",
-   "fieldname": "status_",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "status",
-   "options": "Reviewed\nPending Review",
+   "label": "Date",
    "read_only": 1
   },
   {
    "fieldname": "last_transfer_date",
    "fieldtype": "Date",
-   "label": "Last Transfer Date"
+   "label": "Last Transfer Date",
+   "read_only": 1
   },
   {
    "default": "Now",
    "fieldname": "time",
    "fieldtype": "Time",
-   "label": "Time"
+   "label": "Time",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_xotcw",
@@ -151,12 +137,38 @@
    "fieldname": "payment_entry",
    "fieldtype": "Link",
    "label": "Payment Entry",
-   "options": "Payment Entry"
+   "options": "Payment Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "account_balance",
+   "fieldtype": "Currency",
+   "label": "Account Balance",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "transferred_amount",
+   "fieldtype": "Currency",
+   "label": "Transferred Amount",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "default": "Pending Review",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_standard_filter": 1,
+   "label": "status",
+   "options": "Reviewed\nPending Review",
+   "read_only": 1,
+   "translatable": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-14 18:24:34.710600",
+ "modified": "2023-08-21 14:44:39.731324",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Warnings",

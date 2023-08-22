@@ -150,6 +150,15 @@ doc_events = {
 #		"frappe_advanced.tasks.monthly"
 #	]
 # }
+scheduler_events = {
+
+	"cron": {
+
+		"0 12 * * *": [
+            "frappe_advanced.frappe_advanced.tasks.tasks.account_closed_check",
+		],
+	}
+}
 
 # Testing
 # -------

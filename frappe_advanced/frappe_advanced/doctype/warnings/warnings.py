@@ -18,8 +18,8 @@ class Warnings(Document):
 def insert_warning(warning_type,employee=None,
 		   branch=None,sales_invoice=None,
 		   payment_entry=None,
-		   account_name=None,account_amount=None,
-		   last_transfer_date=None,account_amount_transferred=None,
+		   account_name=None,account_balance=None,
+		   last_transfer_date=None,transferred_amount=None,
 		   write_off_limit=None,write_off_amount_inserted=None):
 	warning = frappe.get_doc(doctype='Warnings',
 				warning_type=warning_type,
@@ -28,9 +28,9 @@ def insert_warning(warning_type,employee=None,
 				sales_invoice=sales_invoice,
 				payment_entry=payment_entry,
 				account_name=account_name,
-				account_amount=account_amount,
+				account_balance=account_balance,
 				last_transfer_date=last_transfer_date,
-				account_amount_transferred=account_amount_transferred,
+				transferred_amount=transferred_amount,
 				write_off_limit=write_off_limit,
 				write_off_amount_inserted=write_off_amount_inserted)
 	warning.insert(ignore_permissions=True)
