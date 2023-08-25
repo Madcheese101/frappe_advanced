@@ -34,6 +34,29 @@ frappe.ui.form.on('Stock Entry', {
             });
         }
 
+        if(!frm.doc.outgoing_stock_entry && !frm.is_new()){
+            frm.add_custom_button(__('Change Title'), function(){
+                frappe.prompt({
+                        label: __('Choose Recieving Branch'),
+                        fieldname: 'branch',
+                        fieldtype: 'Link',
+                        options: 'Branch'
+                    }, (values) => {
+                        frm.call({
+            					doc: frm.doc,
+            					method: 'frappe_advanced.frappe_advanced.api.bhc_api.set_title',
+            					args: {
+                                    title: values.branch,
+                                    doc_name: frm.doc.name
+                                },
+                                callback: function(r) {
+                                        frm.reload_doc();
+                                }
+                        });
+                })
+            });
+        }
+
         
     }
 

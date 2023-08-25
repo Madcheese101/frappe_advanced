@@ -7,7 +7,20 @@ def get_current_user_defaults():
     branch, default_warehouse, default_in_transit_warehouse, letter_head = ["","","",""]
     
     if(frappe.session.user != "Administrator"):
-        branch, default_warehouse, default_in_transit_warehouse = frappe.db.get_value('Employee', {'user_id': frappe.session.user}, ['branch', 'default_warehouse', 'default_in_transit_warehouse'])
+        branch, default_warehouse, default_in_transit_warehouse = frappe.db.get_value('Employee', {'user_id': frappe.session.user}, 
+                                                                                      ['branch', 'default_warehouse', 
+                                                                                       'default_in_transit_warehouse'])
         letter_head = frappe.db.get_value('Letter Head', {'branch': branch}, ['name'])
   
-    return {"branch": branch or "", "default_warehouse": default_warehouse or "", "default_in_transit_warehouse": default_in_transit_warehouse or "", "letter_head": letter_head or ""}
+    return {"branch": branch or "",
+            "default_warehouse": default_warehouse or "", 
+            "default_in_transit_warehouse": default_in_transit_warehouse or "", 
+            "letter_head": letter_head or ""}
+
+@frappe.whitelist()
+def set_title(title, doc_name):
+    frappe.db.set_value('Stock Entry', doc_name, {
+        'title': title
+    })
+    frappe.db.commit()
+    return True
