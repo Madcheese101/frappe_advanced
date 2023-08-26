@@ -9,7 +9,9 @@
   "warnings_settings_section",
   "account_transfer_limit_warning",
   "partial_balance_transfer_warning",
+  "stock_entry_not_accepted_warning",
   "account_transfer_days_limit",
+  "stock_entry_days_limit",
   "column_break_dlrqu",
   "write_off_limit_warning",
   "canceled_sales_invoice_warning",
@@ -24,7 +26,7 @@
    "description": "Number of days before inserting a warning if the account amount was not transferred to main account",
    "fieldname": "account_transfer_days_limit",
    "fieldtype": "Int",
-   "label": "Account Transfer Days Limit"
+   "label": "Account Transfer (Days to Warn)"
   },
   {
    "description": "The account numbers of the accounts that you want to exclude when checking if the account balance is transferred.\n<br>\n<br>\nExample: 1111,1120,1130",
@@ -83,12 +85,23 @@
    "fieldname": "canceled_sales_invoice_warning",
    "fieldtype": "Check",
    "label": "Canceled Sales Invoice Warning"
+  },
+  {
+   "default": "0",
+   "fieldname": "stock_entry_not_accepted_warning",
+   "fieldtype": "Check",
+   "label": "Stock Entry Not Accepted Warning"
+  },
+  {
+   "fieldname": "stock_entry_days_limit",
+   "fieldtype": "Int",
+   "label": "Stock Entry Accepted (Days to Warn)"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-08-17 20:48:57.332600",
+ "modified": "2023-08-24 15:48:36.740406",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Advanced Settings",

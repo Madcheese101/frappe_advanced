@@ -19,6 +19,7 @@
   "section_break_poahv",
   "sales_invoice",
   "payment_entry",
+  "stock_entry",
   "account_name",
   "account_balance",
   "last_transfer_date",
@@ -33,7 +34,7 @@
    "fieldtype": "Select",
    "in_standard_filter": 1,
    "label": "Warning Type",
-   "options": "Canceled Sales Invoice\nWrite-Off Limit Exceeded\nAccount not Transferred\nPartial Account Transfer",
+   "options": "Canceled Sales Invoice\nWrite-Off Limit Exceeded\nAccount not Transferred\nPartial Account Transfer\nStock Entry not Accepted",
    "read_only": 1,
    "translatable": 1
   },
@@ -164,11 +165,18 @@
    "options": "Reviewed\nPending Review",
    "read_only": 1,
    "translatable": 1
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "label": "Stock Entry",
+   "options": "Stock Entry",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-21 14:44:39.731324",
+ "modified": "2023-08-25 15:20:54.159212",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Warnings",

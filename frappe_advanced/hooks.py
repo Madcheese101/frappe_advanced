@@ -122,7 +122,6 @@ doc_events = {
         "before_submit": "frappe_advanced.crud_events.warning_events.validate_write_off_limit"
 	},
     "Stock Entry": {
-		"on_submit": "frappe_advanced.crud_events.events.split_move_batches_on_stock_entry",
         "before_save": "frappe_advanced.crud_events.events.stock_entry_set_default_from_target"
 	},
     "POS Profile": {
@@ -156,6 +155,7 @@ scheduler_events = {
 
 		"0 12 * * *": [
             "frappe_advanced.frappe_advanced.tasks.tasks.account_closed_check",
+            "frappe_advanced.frappe_advanced.tasks.tasks.stock_entry_check",
 		],
 	}
 }
