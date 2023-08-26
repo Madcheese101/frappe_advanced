@@ -31,15 +31,15 @@ def account_closed_check():
                     # are in parent account name.
                     if (excluded):
                         if(any(ele not in account.parent_account for ele in excluded)):
-                            insert_w(account, today, days_limit)
+                            insert_account_closed_warning(account, today, days_limit)
                     else:
-                        insert_w(account, today, days_limit)
+                        insert_account_closed_warning(account, today, days_limit)
 
-def insert_w(account, today, days_limit):
+def insert_account_closed_warning(account, today, days_limit):
     balance = get_balance_on(account.name)
     if balance > 0:
         last_entry_date = frappe.db.get_value('Payment Entry',
-                                            {'paid_from':account.name}, #filter
+                                            {'paid_from':account.name, 'docstatus': 1}, #filter
                                             ['posting_date']) #fieled to retrieve
         if (last_entry_date):
             days_diff = (today - last_entry_date).days
@@ -48,7 +48,7 @@ def insert_w(account, today, days_limit):
             # then fetch latest sale invoice date
             last_sale_date = frappe.db.get_value('Sales Invoice Payment',
                                             {'account':account.name}, #filter
-                                            ['modified']) #fieled to retrieve
+                                            ['creation']) #fieled to retrieve
             days_diff = (today - last_sale_date.date()).days
 
 
@@ -56,8 +56,9 @@ def insert_w(account, today, days_limit):
                                             {'warning_type':'Account not Transferred',
                                                 'last_transfer_date':last_entry_date,
                                                 'account_name':account.name,
+                                                'account_balance': balance,
                                                 'status': 'Pending Review'},
-                                                ['last_transfer_date']
+                                                ['date']
                                                 )
         if ((days_diff > days_limit) 
             and account.branch 
@@ -69,3 +70,42 @@ def insert_w(account, today, days_limit):
                                 account_balance=balance,
                                 last_transfer_date=last_entry_date)
             warning.insert(ignore_permissions=True)
+
+
+
+def stock_entry_check():
+    if frappe.db.get_single_value('Advanced Settings', 'stock_entry_not_accepted_warning'):        
+        days_limit = frappe.db.get_single_value('Advanced Settings', 'stock_entry_days_limit')
+        today = datetime.today().date()
+        branch_list = frappe.db.get_list('Branch', fields=['name'], pluck="name")
+
+        if(days_limit and days_limit > 0):          
+            filters = {'per_transferred': ['<', 100],
+                        'add_to_transit': 1,
+                        'outgoing_stock_entry': '',
+                        'docstatus': 1}
+            
+            stock_entries = frappe.db.get_list('Stock Entry', 
+                                        fields=['name','title','posting_date', 'outgoing_stock_entry'],
+                                        filters=filters,
+                                        order_by="posting_date desc")
+            if(stock_entries):
+                for stock_entry in stock_entries:
+                    last_warning = frappe.db.get_value('Warnings',
+                                            {'warning_type':'Stock Entry not Accepted',
+                                                'stock_entry':stock_entry.name,
+                                                'status': 'Pending Review'},
+                                                ['date']
+                                                )
+                    if stock_entry.title not in branch_list:
+                        stock_entry.title = None
+
+                    if not last_warning:
+                        days_diff = (today - stock_entry.posting_date).days
+                        
+                        if ((days_diff > days_limit) and not last_warning):
+                            warning = frappe.get_doc(doctype='Warnings',
+                                                warning_type='Stock Entry not Accepted',
+                                                branch=stock_entry.title,
+                                                stock_entry=stock_entry.name)
+                            warning.insert(ignore_permissions=True)
