@@ -15,10 +15,7 @@ app_license = "MIT"
 # include js, css files in header of desk.html
 # app_include_css = "/assets/frappe_advanced/css/frappe_advanced.css"
 # app_include_js = "/assets/frappe_advanced/js/frappe_advanced.js"
-app_include_js = [
-	"/assets/js/custom_list.min.js",
-    "/assets/js/custom_form.min.js"
-]
+app_include_js = ["frappe_advanced.bundle.js"]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/frappe_advanced/css/frappe_advanced.css"
@@ -33,7 +30,9 @@ app_include_js = [
 
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
-page_js = {"print" : "printing/page/print/custom_print.js"}
+# page_js = {"print" : "printing/page/print/custom_print.js"}
+page_js = {"print" : "page.bundle.js"}
+
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
