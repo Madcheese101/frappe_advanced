@@ -238,6 +238,10 @@ fixtures = [
                     "Employee-default_warehouse",
                     "Property Setter-dont_replace",
                     "Payment Entry-note_count",
+                    "Branch-warehouse",
+                    "Branch-parent_account",
+                    "Branch-letter_head",
+                    "Branch-mode_of_payment",
                 ),
             ]
         ]
