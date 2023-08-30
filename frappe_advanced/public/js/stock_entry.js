@@ -7,7 +7,7 @@ frappe.ui.form.on('Stock Entry', {
         if(!frm.doc.stock_entry_type){frm.set_value("stock_entry_type", "Material Transfer")}
         
         frappe.call({
-            method:"frappe_advanced.frappe_advanced.api.bhc_api.get_current_user_defaults",
+            method:"frappe_advanced.frappe_advanced.api.api.get_current_user_defaults",
             callback: function(r) {
                 default_warehouse = r.message.default_warehouse;
                 default_in_transit_warehouse = r.message.default_in_transit_warehouse;

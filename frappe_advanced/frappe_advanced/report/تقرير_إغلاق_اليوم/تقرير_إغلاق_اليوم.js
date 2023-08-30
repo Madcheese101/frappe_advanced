@@ -21,7 +21,7 @@ frappe.query_reports["تقرير إغلاق اليوم"] = {
     onload: function(report) {
 		report.page.add_inner_button(__("Print Report"), function() {
             frappe.call({
-                method:"frappe_advanced.frappe_advanced.api.bhc_api.get_current_user_defaults",
+                method:"frappe_advanced.frappe_advanced.api.api.get_current_user_defaults",
                 callback: function(r) {
                     report.direct_print_report(r.message.letter_head);   
                 }
