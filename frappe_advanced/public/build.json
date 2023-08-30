@@ -1,9 +1,8 @@
 {
 	"css/custom_printview.min.css": [
-		"public/css/custom_printview.css",
 		"public/scss/custom_printview.scss"
 	],
-	"js/custom_list.min.js": ["public/html/print_template.html"],
+	"js/custom_list.min.js": ["public/js/html/print_template.html"],
 	"js/custom_form.min.js": [
 		"public/js/frappe/form/custom_form.js",
 		"public/js/frappe/views/reports/custom_query_report.js"

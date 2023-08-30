@@ -43,8 +43,9 @@ frappe.pages['print'].on_page_load = function(wrapper) {
 				});
 			});
 		} else {
-			print_view.frm = frappe.route_options.frm.doctype ?
-				frappe.route_options.frm : frappe.route_options.frm.frm;
+			print_view.frm = frappe.route_options.frm.doctype
+				? frappe.route_options.frm
+				: frappe.route_options.frm.frm;
 			frappe.route_options.frm = null;
 			print_view.show(print_view.frm);
 		}

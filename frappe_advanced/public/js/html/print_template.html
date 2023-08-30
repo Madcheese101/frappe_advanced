@@ -7,8 +7,8 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<title>{{ title }}</title>
-	{{ frappe.assets.include_style("printview.css", base_url, frappe.utils.is_rtl(lang)) }}
-	{{ frappe.assets.include_style("custom_printview.min.css", base_url, frappe.utils.is_rtl(lang)) }}
+	<link href="{{ base_url }}{{ frappe.assets.bundled_asset('print.bundle.css', frappe.utils.is_rtl(lang)) }}" rel="stylesheet">
+	<link href="{{ base_url }}{{ frappe.assets.bundled_asset('custom_print.bundle.css', frappe.utils.is_rtl(lang)) }}" rel="stylesheet">
 	<style>
 		{{ print_css }}
 	</style>
@@ -28,9 +28,11 @@
 			</div>
 		{% endif %}
 
-		<div class="print-format {% if landscape %} landscape {% endif %}"
+		<div class="print-format {% if landscape %}landscape{% endif %}"
 				{% if columns.length > 20 %}
-					style="font-size: 4.0pt"
+					{% if can_use_smaller_font %}
+						style="font-size: 4.0pt"
+					{% endif %}
 				{% endif %}
 			>
 			{% if print_settings.letter_head %}
