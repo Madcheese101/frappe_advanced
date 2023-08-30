@@ -4,3 +4,6 @@
 *.swp
 tags
 frappe_advanced/docs/current
+frappe_advanced/public/dist
+frappe_advanced/public/dist/css-rtl/
+frappe_advanced/public/dist/css/
