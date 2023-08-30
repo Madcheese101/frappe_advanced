@@ -1,0 +1,71 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:branch",
+ "creation": "2023-08-29 19:58:19.602477",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "branch",
+  "section_break_fzkew",
+  "desc",
+  "max_qty_per_size"
+ ],
+ "fields": [
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Branch",
+   "options": "Branch",
+   "reqd": 1,
+   "set_only_once": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "max_qty_per_size",
+   "fieldtype": "Table",
+   "label": "Max QTY per Size",
+   "options": "Stock Max QTY per Size"
+  },
+  {
+   "default": "\u0647\u0646\u0627 \u064a\u0645\u0643\u0646\u0643 \u0648\u0636\u0639 \u0627\u0644\u0645\u062e\u0632\u0648\u0646 \u0627\u0644\u0623\u0642\u0635\u0649 \u0627\u0644\u0630\u064a \u062a\u0631\u063a\u0628 \u0641\u064a \u062a\u0648\u0641\u0631\u0647 \u0641\u064a \u0627\u0644\u0645\u062d\u0644 \u0644\u0643\u0644 \u0645\u0642\u0627\u0633\n<br>\n\u0636\u0639 0 \u0641\u064a \u0643\u0645\u064a\u0629 \u0627\u0644\u0645\u0642\u0627\u0633 \u0627\u0644\u0630\u064a \u0644\u0627 \u062a\u0631\u064a\u062f \u062a\u0648\u0641\u0631\u0647 \u0641\u064a \u0627\u0644\u0645\u062d\u0644",
+   "fieldname": "desc",
+   "fieldtype": "Read Only"
+  },
+  {
+   "fieldname": "section_break_fzkew",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-08-30 01:19:54.981741",
+ "modified_by": "Administrator",
+ "module": "Frappe Advanced",
+ "name": "Stock Order QTY Settings",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "branch",
+ "track_changes": 1,
+ "track_seen": 1
+}
