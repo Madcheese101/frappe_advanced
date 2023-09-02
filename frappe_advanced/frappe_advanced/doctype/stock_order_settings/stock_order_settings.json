@@ -9,6 +9,7 @@
  "engine": "InnoDB",
  "field_order": [
   "branch",
+  "excluded_item_groups",
   "section_break_fzkew",
   "desc",
   "max_qty_per_size"
@@ -38,14 +39,21 @@
   {
    "fieldname": "section_break_fzkew",
    "fieldtype": "Section Break"
+  },
+  {
+   "description": "Select the Item Groups that you want to exclude from the report filter.",
+   "fieldname": "excluded_item_groups",
+   "fieldtype": "Table MultiSelect",
+   "label": "Excluded Item Groups",
+   "options": "Excluded Item Groups"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-30 01:19:54.981741",
+ "modified": "2023-08-31 04:20:38.368085",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
- "name": "Stock Order QTY Settings",
+ "name": "Stock Order Settings",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
@@ -58,6 +66,18 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Stock User",
    "share": 1,
    "write": 1
   }

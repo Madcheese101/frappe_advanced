@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 import frappe
 
-class StockOrderQTYSettings(Document):
+class StockOrderSettings(Document):
 	@frappe.whitelist()
 	def set_table(self):
 		filters = {'parent':"المقاس"}
