@@ -27,7 +27,7 @@ def get_data(filters):
 					filters={'parent':userBranch}, # use userBranch instead of static value
 					fields=['size', 'max_qty'],
 					order_by="size")
-	excluded_item_groups = frappe.db.get_all("Excluded Item Groups",
+	excluded_item_groups = frappe.db.get_all("Item Groups Link",
 					filters={'parent':userBranch}, # use userBranch instead of static value
 					fields=['item_group'],
 					order_by="item_group",

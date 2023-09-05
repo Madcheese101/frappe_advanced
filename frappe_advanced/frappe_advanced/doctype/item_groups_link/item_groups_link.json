@@ -23,7 +23,7 @@
  "modified": "2023-08-31 03:11:11.069478",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
- "name": "Excluded Item Groups",
+ "name": "Item Groups Link",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

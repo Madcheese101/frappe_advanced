@@ -45,12 +45,12 @@
    "fieldname": "excluded_item_groups",
    "fieldtype": "Table MultiSelect",
    "label": "Excluded Item Groups",
-   "options": "Excluded Item Groups"
+   "options": "Item Groups Link"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-31 04:20:38.368085",
+ "modified": "2023-09-05 21:11:40.921177",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Stock Order Settings",
