@@ -231,7 +231,11 @@ fixtures = [
                 (
                     "Letter Head-branch",
                     "Account-branch",
-                    "Property Setter-dont_replace"
+                    "Property Setter-dont_replace",
+                    "Branch-warehouse",
+                    "Branch-parent_account",
+                    "Branch-letter_head",
+                    "Branch-mode_of_payment",
                 ),
             ]
         ]
