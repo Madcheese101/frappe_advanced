@@ -10,7 +10,10 @@ def execute(filters=None):
 	return columns, data
 
 def get_data(filters):
-	userBranch = frappe.db.get_value("Employee", {'user_id':frappe.session.user}, ["branch"])
+	userBranch = None
+	if(frappe.session.user != "Administrator"):
+		userBranch = frappe.db.get_value("Employee", {'user_id':frappe.session.user}, ["branch"])
+		
 	warehouse, main_warehouse= frappe.db.get_value("Branch", {'name':userBranch}, ["warehouse, main_warehouse"])
 	data = []
 	if not userBranch:

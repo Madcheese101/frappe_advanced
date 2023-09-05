@@ -14,31 +14,28 @@ from frappe.utils import (
 
 def execute(filters=None):
 	
+	userBranch = None
 	# get current user branch
-	userBranch = frappe.db.get_value("Employee", {'user_id':frappe.session.user}, ["branch"])
+	if(frappe.session.user != "Administrator"):
+		userBranch = frappe.db.get_value("Employee", {'user_id':frappe.session.user}, ["branch"])
+	report_summary, message = [],[]
 	columns = get_columns()
-	data = get_data(filters, userBranch)
-	report_summary = get_report_summary(filters, userBranch)
-	message = [
-		"<b>"+" الرصيد المتبقي في الخزائن (بعد التحويل) إلى يوم <span style='color:Red;'>"+filters.get("to_date")+"</span></b>"
-	]
+	data = get_data(filters)
+	
+	if userBranch:
+		report_summary = get_report_summary(filters, userBranch)
+		message = [
+			"<b>"+" الرصيد المتبقي في الخزائن (بعد التحويل) إلى يوم <span style='color:Red;'>"+filters.get("to_date")+"</span></b>"
+		]
 	return columns, data, message, None, report_summary
 
-def get_data(filters, userBranch):
+def get_data(filters):
 
 	payment_modes = []
 	data = []
-
-	# if user branch has value then list (mode of payments) that has the (branch name) in them
-	# if empty show error message.
-	if(userBranch):
-		payment_modes = frappe.db.get_list('Mode of Payment', filters={'name':["like",f"%{userBranch}%"]}, order_by='name desc')
-	else:
-		frappe.msgprint('هذا التقرير لإغلاق الحساب فقط, الرجاء الدخول بحساب مدير محل')
-		return data
-
+	payment_modes = frappe.db.get_list('Mode of Payment', pluck='name', order_by='name desc')
 	# loop through mode of payments and add them to the result list as heads
-	for p in payment_modes:
+	for payment in payment_modes:
 		head = frappe.db.get_list('Payment Entry',
 			fields=['mode_of_payment',
 	   				'(sum(base_paid_amount)) as base_paid_amount',
@@ -47,23 +44,31 @@ def get_data(filters, userBranch):
 					 '(0) as indent', '(1) as has_value'],		
 			filters={
 			'status':"Submitted",
-			'mode_of_payment':p.name,
+			'mode_of_payment':payment,
 			'posting_date':["between", (filters.get("from_date"),filters.get("to_date"))]}
 			,order_by='posting_date desc'
 			,group_by="mode_of_payment")
 		if(head):
 			data.extend(head)
 		else:
-			data.append({'mode_of_payment': p.name,"base_paid_amount":0,"received_amount":0
+			data.append({'mode_of_payment': payment,"base_paid_amount":0,"received_amount":0
 		,"diff":0,'indent':0, 'has_value': True})
 
 
 		# get the data for each mode of payment
 		node_data = frappe.db.get_list('Payment Entry',
-			fields=['mode_of_payment','name','paid_from_account_balance','base_paid_amount','received_amount', ('(received_amount-base_paid_amount) as diff'), 'posting_date', '(1) as indent', '(0) as has_value'],		
+			fields=['mode_of_payment',
+		   'name',
+		   'paid_from_account_balance',
+		   'base_paid_amount',
+		   'received_amount', 
+		   ('(received_amount-base_paid_amount) as diff'),
+			'posting_date', 
+			'(1) as indent', 
+			'(0) as has_value'],		
 			filters={
 			'status':"Submitted",
-			'mode_of_payment':p.name,
+			'mode_of_payment':payment,
 			'posting_date':["between", (filters.get("from_date"),filters.get("to_date"))]}
 			,order_by='posting_date desc')
 
@@ -73,31 +78,28 @@ def get_data(filters, userBranch):
 	return data
 
 def get_report_summary(filters, userBranch):
-	accounts = []
-	if(userBranch):
-		accounts = frappe.db.get_list('Account', fields=['name', 'account_name'],filters={'parent_account':["like",f"%{userBranch}%"]}, order_by='name desc')
-		report_summary = []
-		# todate = filters.get("to_date") ? :
-		if(accounts):
-			for account in accounts:
-				balance = get_balance_on(account.name,filters.get("to_date"), ignore_account_permission=True)
-				account_name = ((account.account_name).replace("محل", "")).strip()
-				
+	accounts = frappe.db.get_list('Account', fields=['name', 'account_name'],filters={'parent_account':["like",f"%{userBranch}%"]}, order_by='name desc')
+	report_summary = []
+	# todate = filters.get("to_date") ? :
+	if(accounts):
+		for account in accounts:
+			balance = get_balance_on(account.name,filters.get("to_date"), ignore_account_permission=True)
+			account_name = ((account.account_name).replace("محل", "")).strip()
+			
+			color = "blue"
+
+			if "بطاقة" in account.account_name:
 				color = "blue"
+			elif "نقد" in account.account_name:
+				color = "green"
+			elif "صك" in account.account_name:
+				color = "red"
 
-				if "بطاقة" in account.account_name:
-					color = "blue"
-				elif "نقد" in account.account_name:
-					color = "green"
-				elif "صك" in account.account_name:
-					color = "red"
+			report_summary.append({"label":account_name,"value":format_value(balance, {"fieldtype":"Currency"}),"indicator":color},)
+		return report_summary
+	
+	else: return None
 
-				report_summary.append({"label":account_name,"value":format_value(balance, {"fieldtype":"Currency"}),"indicator":color},)
-			return report_summary
-		
-		else: return None
-	else:
-		return None
 	
 def format_value(value, df=None, doc=None, currency=None, translated=False, format=None):
 	"""Format value based on given fieldtype, document reference, currency reference.
