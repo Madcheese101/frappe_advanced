@@ -14,14 +14,15 @@ def get_data(filters):
 	if(frappe.session.user != "Administrator"):
 		userBranch = frappe.db.get_value("Employee", {'user_id':frappe.session.user}, ["branch"])
 		
-	warehouse, main_warehouse= frappe.db.get_value("Branch", {'name':userBranch}, ["warehouse, main_warehouse"])
+	warehouse = frappe.db.get_value("Branch", {'name':userBranch}, ["warehouse"])
+	main_warehouse = frappe.db.get_single_value('Stock Settings', 'default_warehouse')
 	data = []
 	if not userBranch:
 		frappe.throw("User has no Branch Set")
 	if not warehouse:
 		frappe.throw("Branch has no Warehouse Set")
 	if not main_warehouse:
-		frappe.throw("Branch has no Main Warehouse Set")
+		frappe.throw("Default Warehouse is not set, Please set it from Stock Settings Doctype.")
 
 	size_settings = frappe.db.get_all("Stock Max QTY per Size",
 					filters={'parent':userBranch}, # use userBranch instead of static value
