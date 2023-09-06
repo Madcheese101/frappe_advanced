@@ -18,7 +18,10 @@
   "write_off_limit",
   "exclude_account_numbers",
   "note_count_settings_section",
-  "company_cash_notes"
+  "company_cash_notes",
+  "batch_settings_section",
+  "auto_split_batch",
+  "for_item_groups"
  ],
  "fields": [
   {
@@ -96,12 +99,30 @@
    "fieldname": "stock_entry_days_limit",
    "fieldtype": "Int",
    "label": "Stock Entry Accepted (Days to Warn)"
+  },
+  {
+   "fieldname": "batch_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Batch Settings"
+  },
+  {
+   "default": "0",
+   "description": "Auto split batch on Material Transfer received.\n<br>\nPlease, set item groups for auto-split batch in the field below.",
+   "fieldname": "auto_split_batch",
+   "fieldtype": "Check",
+   "label": "Auto Split Batch"
+  },
+  {
+   "fieldname": "for_item_groups",
+   "fieldtype": "Table MultiSelect",
+   "label": "For Item Groups",
+   "options": "Item Groups Link"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-08-24 15:48:36.740406",
+ "modified": "2023-09-05 21:17:46.352294",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Advanced Settings",
