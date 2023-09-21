@@ -118,6 +118,7 @@ doc_events = {
         "before_submit": "frappe_advanced.crud_events.warning_events.validate_write_off_limit"
 	},
     "Stock Entry": {
+        "on_submit": "frappe_advanced.crud_events.events.split_batch_on_recieve",
         "before_save": "frappe_advanced.crud_events.events.stock_entry_set_default_from_target"
 	},
     "POS Profile": {

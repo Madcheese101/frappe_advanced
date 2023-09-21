@@ -11,6 +11,25 @@ def stock_entry_set_default_from_target(doc, method=None):
         if not doc.from_warehouse and doc.outgoing_stock_entry and doc.purpose == "Material Transfer":
                 doc.from_warehouse = doc.get("items")[0].s_warehouse
 
+def split_batch_on_recieve(doc, method=None):
+        auto_split_enabled = frappe.db.get_single_value('Advanced Settings', 'auto_split_batch')
+
+        if auto_split_enabled:
+            new_batch_id = None
+            main_wh = frappe.db.get_single_value('Stock Settings', 'default_warehouse')
+            main_transit_wh = frappe.db.get_value('Warehouse', {'name': main_wh}, ['default_in_transit_warehouse'])
+            allowed_groups = frappe.db.get_all('Item Groups Link',
+                                        filters={'parent':'Advanced Settings'},
+                                        pluck='item_group')
+
+            if(doc.outgoing_stock_entry and doc.from_warehouse == main_transit_wh):
+                for item in doc.get("items"):
+                    item_group = frappe.db.get_value('Item', {'item_code': item.item_code}, ['item_group'])
+                    if item.batch_no and item_group in allowed_groups:
+                        item_batch = frappe.get_doc("Batch", item.batch_no)
+                        if item_batch.batch_qty != item.qty:
+                            split_batch(item.batch_no, item.item_code, item.t_warehouse, item.qty, new_batch_id)
+
 def update_user_permissions_event(doc, method = None):
     doc_list = ["Mode of Payment", "Warehouse", "POS Profile"]
     if doc.doctype == "POS Profile":
