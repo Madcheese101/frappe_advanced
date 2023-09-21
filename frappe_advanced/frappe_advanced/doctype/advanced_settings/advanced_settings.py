@@ -15,6 +15,14 @@ class AdvancedSettings(Document):
 			if not isValid:
 				frappe.throw(
 					"حقل الفئات النقدية للشركة يجب ان يحتوي على أرقام أو فواصل أو نقاط عشرية فقط")
+		
+		if self.auto_split_batch:
+			main_wh = frappe.db.get_single_value('Stock Settings', 'default_warehouse')
+			main_transit_wh = frappe.db.get_value('Warehouse', {'name': main_wh}, ['default_in_transit_warehouse'])
+			if not main_wh:
+				frappe.throw("Default Warehouse is not set.<br> Please set it in Stock Settings")
+			if not main_transit_wh:
+				frappe.throw("In-Transit Warehouse for the Default Warehouse is not set.")
 			
 	def before_save(self):
 		if self.company_cash_notes:

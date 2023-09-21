@@ -71,8 +71,6 @@ def insert_account_closed_warning(account, today, days_limit):
                                 last_transfer_date=last_entry_date)
             warning.insert(ignore_permissions=True)
 
-
-
 def stock_entry_check():
     if frappe.db.get_single_value('Advanced Settings', 'stock_entry_not_accepted_warning'):        
         days_limit = frappe.db.get_single_value('Advanced Settings', 'stock_entry_days_limit')
