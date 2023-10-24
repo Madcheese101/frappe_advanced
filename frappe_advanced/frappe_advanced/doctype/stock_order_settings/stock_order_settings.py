@@ -11,14 +11,14 @@ class StockOrderSettings(Document):
 		filters = {'parent':"المقاس"}
 		existing_size = None
 		if self.max_qty_per_size:
-			existing_size = frappe.db.get_list('Stock Max QTY per Size',
+			existing_size = frappe.db.get_all('Stock Max QTY per Size',
 				 fields=["size"],
 				 filters={"parent": self.name},
 				 order_by='size',
 				 pluck="size")
 			filters['attribute_value'] = ['not in',existing_size]
 
-		size_list = frappe.db.get_list('Item Attribute Value',
+		size_list = frappe.db.get_all('Item Attribute Value',
 				 fields=["attribute_value as size", "'0' as max_qty"],
 				 filters=filters,
 				 order_by='attribute_value')		

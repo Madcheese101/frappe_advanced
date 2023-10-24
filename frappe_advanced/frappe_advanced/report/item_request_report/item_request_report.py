@@ -3,6 +3,7 @@
 
 import frappe
 from frappe import _
+from pypika.terms import Case
 
 def execute(filters=None):
 	data = get_data(filters)
@@ -40,41 +41,48 @@ def get_data(filters):
 					pluck="name")
 	clean_item_groups = tuple(item_groups)
 	# for item_group in item_groups:
+
+	item_table = frappe.qb.DocType("Item")
+	main = frappe.qb.DocType("Bin")
+	branch = frappe.qb.DocType("Bin").as_('b')
+	variant_table = frappe.qb.DocType("Item Variant Attribute")
+	
 	for size_info in size_settings:
 		if size_info.max_qty > 0:
-			items_data = frappe.db.sql(
-				"""
-				SELECT
-					i.item_code,
-					i.description,
-					b.actual_qty as branch_qty,
-					main.actual_qty as main_qty,
-					(CASE 
-						WHEN main.actual_qty >= {max_qty} 
-							OR main.actual_qty >= ({max_qty} - b.actual_qty) 
-							THEN {max_qty} - b.actual_qty
-						ELSE main.actual_qty
-					END) as order_qty
-				FROM
-					`tabItem` i, `tabBin` b, `tabBin` main, `tabItem Variant Attribute` c
-				WHERE 
-					b.item_code = i.item_code
-					AND main.item_code = i.item_code
-					AND i.item_group in {clean_item_groups}
-					AND b.warehouse = '{warehouse}'
-					AND b.actual_qty < {max_qty}
-					AND main.warehouse = '{main_warehouse}'
-					AND main.actual_qty > 0
-					AND c.attribute_value = '{size}'
-					AND c.parent = i.item_code
-				Group By i.description
-				""".format(max_qty=size_info.max_qty,size=size_info.size,
-						main_warehouse=main_warehouse, warehouse=warehouse,
-						clean_item_groups=clean_item_groups),
-					as_dict=1,
-				)
+			items_data = (frappe.qb
+			.from_(item_table)
+			.from_(main).as_('main')
+			.from_(branch).as_('b')
+			.from_(variant_table)
+			.select(
+				item_table.item_code, 
+				item_table.description,
+				branch.actual_qty.as_('branch_qty'),
+				main.actual_qty.as_('main_qty'),
+				Case()
+				.when((main.actual_qty >= size_info.max_qty) | 
+						(main.actual_qty >= (size_info.max_qty - branch.actual_qty)), size_info.max_qty - branch.actual_qty)
+				.else_(main.actual_qty).as_("order_qty")
+			)
+			.where(
+				(main.warehouse==main_warehouse) & 
+				(main.actual_qty > 0) &
+				(item_table.item_code == main.item_code)
+			)
+			.where(
+				(branch.warehouse==warehouse) & 
+				(branch.actual_qty < size_info.max_qty) & 
+				(item_table.item_code == branch.item_code)
+			)
+			.where((item_table.item_group).isin(clean_item_groups))
+			.where(
+				(variant_table.attribute_value == size_info.size) & 
+				(item_table.item_code == variant_table.parent))
+			.groupby(item_table.description)
+			).run()
+			
 			if items_data:
-				data.extend(items_data) 
+				data.extend(items_data)
 	return data
 
 def get_columns():
