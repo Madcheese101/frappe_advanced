@@ -20,5 +20,5 @@ frappe.query_reports["نسبة مبيع التصنيفات"] = {
     "tree":true,
 	"name_field":"item_group",
 	"parent_field":"parent_item_group",
-	"initial_depth":3
+	"initial_depth":1
 };
