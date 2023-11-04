@@ -5,7 +5,7 @@ from frappe_advanced.frappe_advanced.doctype.warnings.warnings import insert_war
 from frappe.utils.user import get_user_fullname
 
 # on Sales invoice Cancelled
-def insert_invoice_warning(doc, method=None):
+def cancel_invoice_warning(doc, method=None):
     if frappe.db.get_single_value('Advanced Settings', 'canceled_sales_invoice_warning'):
         role_check = "Accounts Manager" in frappe.get_roles(frappe.session.user)
         if doc.doctype == "Sales Invoice" and not role_check:
@@ -77,3 +77,26 @@ def validate_write_off_limit(doc, method=None):
                                                     write_off_amount_inserted=total,
                                                     employee=employee)
                     frappe.throw(_("Write off must be less than or equal to {0} {1}".format(write_off_limit, doc.company_currency)))
+
+def exceeded_discount_percentage(doc, method = None):
+    if frappe.db.get_single_value('Advanced Settings', 'exceeded_discount_percentage'):
+        role_check = "Accounts Manager" in frappe.get_roles(frappe.session.user)
+        posawesome_exists = "posawesome" in frappe.get_installed_apps()
+
+        if doc.doctype == "Sales Invoice" and not role_check and posawesome_exists:
+            max_discount = frappe.db.get_value('POS Profile', doc.pos_profile, ['posa_max_discount_allowed'])
+            exceeded_items = ''
+            for item in doc.get("items"):
+                if max_discount > 0 and item.discount_percentage > max_discount:
+                    exceeded_items += "الصنف: {item_name}       التخفيض: %{discount} <br>".format(item_name=item.item_name,
+                                                                                            discount=item.discount_percentage)
+            if exceeded_items:
+                branch = frappe.db.get_value('Branch', {'warehouse': doc.set_warehouse}, ['name'])
+                employee = get_user_fullname(frappe.session.user)
+                warning =  insert_warning(
+                                                warning_type='Exceeded Discount Percentage',
+                                                branch=branch,
+                                                sales_invoice=doc.name,
+                                                employee=employee,
+                                                items=exceeded_items
+                                                )
