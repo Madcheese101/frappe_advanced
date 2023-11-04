@@ -59,9 +59,9 @@ def validate_write_off_limit(doc, method=None):
                 total = sum(d.amount for d in doc.get("deductions"))
                 
                 if(total > write_off_limit and doc.difference_amount == 0):
-                    branch = frappe.db.get_value('Account', 
-                                    {'name':doc.paid_from},
-                                    ['branch'])
+                    branch = frappe.db.get_value('Branch Mode of Payment',
+                                                  {'mode_of_payment': doc.mode_of_payment},
+                                                  ['parent'])
                     employee = get_user_fullname(frappe.session.user)
                     last_warning = frappe.db.exists('Warnings',
                                                             {'warning_type':'Write-Off Limit Exceeded',
