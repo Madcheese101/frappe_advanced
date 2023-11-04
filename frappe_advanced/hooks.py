@@ -111,7 +111,8 @@ override_doctype_class = {
 # }
 doc_events = {
 	"Sales Invoice": {
-		"on_cancel": "frappe_advanced.crud_events.warning_events.insert_invoice_warning"
+		"on_cancel": "frappe_advanced.crud_events.warning_events.cancel_invoice_warning",
+		"on_submit": "frappe_advanced.crud_events.warning_events.exceeded_discount_percentage"
 	},
     "Payment Entry": {
 		"on_submit": "frappe_advanced.crud_events.warning_events.partial_balance_transfer",

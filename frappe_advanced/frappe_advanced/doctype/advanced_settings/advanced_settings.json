@@ -15,6 +15,7 @@
   "column_break_dlrqu",
   "write_off_limit_warning",
   "canceled_sales_invoice_warning",
+  "exceeded_discount_percentage",
   "write_off_limit",
   "exclude_account_numbers",
   "note_count_settings_section",
@@ -117,12 +118,19 @@
    "fieldtype": "Table MultiSelect",
    "label": "For Item Groups",
    "options": "Item Groups Link"
+  },
+  {
+   "default": "0",
+   "description": "needs POSAwesome to be installed.",
+   "fieldname": "exceeded_discount_percentage",
+   "fieldtype": "Check",
+   "label": "Exceeded Discount Percentage"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-05 21:17:46.352294",
+ "modified": "2023-11-04 14:14:48.765513",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Advanced Settings",
