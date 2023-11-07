@@ -21,7 +21,6 @@ frappe.ui.form.on('Payment Entry', {
             '<p><span style="color: #ff0000;">ACC-INT-.YYYY.-</span></p>');
             validated = false;
         }
-
         if(frappe.user.has_role('Accounts Manager') === false){
             if(frm.doc.payment_type =='Internal Transfer' && !frm.doc.note_count.includes(frm.doc.mode_of_payment)) {
                 msgprint('يجب ان يكون نوع طريقة الإيداع مطابق لطريقة الدفع');
@@ -64,19 +63,19 @@ frappe.ui.form.on('Payment Entry', {
 	    var parentAC_filter = "علي";
 	    var payment = (frm.doc.mode_of_payment.split(" ")[0]).slice(0,-1);
 	    if(frm.doc.payment_type ==='Internal Transfer'){
-	         if(frappe.user_roles.includes("Accounts User")){
-            payment = "الرئيسية";
-            parentAC_filter = "Cash";
-            // parentAC_filter = frm.doc.mode_of_payment.substr(frm.doc.mode_of_payment.indexOf(" ") + 1);
-            
-        }
+	        if(frappe.user_roles.includes("Accounts Manager")){
+                payment = "الرئيسية";
+                parentAC_filter = "Cash";
+                // parentAC_filter = frm.doc.mode_of_payment.substr(frm.doc.mode_of_payment.indexOf(" ") + 1);
+            }
 
         frappe.call({
             method: "frappe.client.get_value",
             args: {
                 doctype: "Account",
                 fieldname: "name",
-                filters:  [["Account", "parent_account", "like", "%"+parentAC_filter+"%"], ["Account", "account_name", "like", "%"+payment+"%"]]
+                filters:  [["Account", "parent_account", "like", "%"+parentAC_filter+"%"], 
+                            ["Account", "account_name", "like", "%"+payment+"%"]]
             },
             callback: function(r) {
                 if (r.message) {
