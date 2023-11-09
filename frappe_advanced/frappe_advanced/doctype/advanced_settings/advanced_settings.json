@@ -10,6 +10,7 @@
   "account_transfer_limit_warning",
   "partial_balance_transfer_warning",
   "stock_entry_not_accepted_warning",
+  "auto_close_shift",
   "account_transfer_days_limit",
   "stock_entry_days_limit",
   "column_break_dlrqu",
@@ -125,12 +126,19 @@
    "fieldname": "exceeded_discount_percentage",
    "fieldtype": "Check",
    "label": "Exceeded Discount Percentage"
+  },
+  {
+   "default": "0",
+   "description": "Auto Close POS Shift at 12AM (POSAwesome)",
+   "fieldname": "auto_close_shift",
+   "fieldtype": "Check",
+   "label": "Auto Close Shift"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-04 14:14:48.765513",
+ "modified": "2023-11-09 15:39:04.672792",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Advanced Settings",
