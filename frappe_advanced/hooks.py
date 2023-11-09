@@ -153,11 +153,15 @@ doc_events = {
 scheduler_events = {
 
 	"cron": {
-
+        # run at 12PM
 		"0 12 * * *": [
             "frappe_advanced.frappe_advanced.tasks.tasks.account_closed_check",
             "frappe_advanced.frappe_advanced.tasks.tasks.stock_entry_check",
 		],
+        # run at 12AM
+        "0 0 * * *":[
+            "frappe_advanced.frappe_advanced.tasks.tasks.auto_close_shift",
+        ]
 	}
 }
 

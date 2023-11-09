@@ -22,10 +22,11 @@ def account_closed_check():
                 filters['account_number'] = ['not in',excluded]
             
             accounts = frappe.db.get_list('Account', 
-                                        fields=['name','parent_account','branch'],
+                                        fields=['name','parent_account'],
                                         filters=filters,
                                         order_by="account_number")
             if(accounts):
+                # frappe.throw(str(accounts))
                 for account in accounts:
                     # another filter to check if exulded account numbers
                     # are in parent account name.
@@ -37,6 +38,9 @@ def account_closed_check():
 
 def insert_account_closed_warning(account, today, days_limit):
     balance = get_balance_on(account.name)
+    branch = frappe.db.get_value('Branch',
+                                {'parent_account': account.parent_account},
+                                ['name'])
     if balance > 0:
         last_entry_date = frappe.db.get_value('Payment Entry',
                                             {'paid_from':account.name, 'docstatus': 1}, #filter
@@ -61,7 +65,7 @@ def insert_account_closed_warning(account, today, days_limit):
                                                 ['date']
                                                 )
         if ((days_diff > days_limit) 
-            and account.branch 
+            and branch 
             and not last_warning):
             warning = frappe.get_doc(doctype='Warnings',
                                 warning_type='Account not Transferred',
@@ -107,3 +111,30 @@ def stock_entry_check():
                                                 branch=stock_entry.title,
                                                 stock_entry=stock_entry.name)
                             warning.insert(ignore_permissions=True)
+
+@frappe.whitelist()
+def auto_close_shift():
+    if frappe.db.get_single_value('Advanced Settings', 'auto_close_shift'):
+        posawesome_exists = "posawesome" in frappe.get_installed_apps()
+        if posawesome_exists:
+            from posawesome.posawesome.doctype.pos_closing_shift.pos_closing_shift import (
+                make_closing_shift_from_opening,
+                submit_closing_shift
+                )
+            filters = {'status': 'Open', 
+                       'docstatus': 1, 
+                       "pos_closing_shift": ["in", ["", None]]}
+            opening_shifts =  frappe.db.get_all('POS Opening Shift',
+                                filters=filters,
+                                pluck="name")
+            
+            if len(opening_shifts) > 0:
+                for open_shift in opening_shifts:
+                    open_doc = vars(frappe.get_doc("POS Opening Shift", open_shift))
+                    closing_doc = make_closing_shift_from_opening(open_doc)
+                    
+                    for payment in closing_doc.payment_reconciliation:
+                        payment.closing_amount = payment.expected_amount
+                        payment.difference = 0
+                        
+                    submit_closing_shift(vars(closing_doc))
