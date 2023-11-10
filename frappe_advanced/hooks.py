@@ -235,7 +235,6 @@ fixtures = [
                 "name",
                 "in",
                 (
-                    "Letter Head-branch",
                     "Account-branch",
                     "Property Setter-dont_replace",
                     "Branch-warehouse",
