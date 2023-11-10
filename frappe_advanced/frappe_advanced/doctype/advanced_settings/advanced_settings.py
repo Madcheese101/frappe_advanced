@@ -16,6 +16,10 @@ class AdvancedSettings(Document):
 				frappe.throw(
 					"حقل الفئات النقدية للشركة يجب ان يحتوي على أرقام أو فواصل أو نقاط عشرية فقط")
 		
+		# if self.account_transfer_limit_warning:
+		# 	from frappe_advanced.frappe_advanced.tasks.tasks import stock_entry_check
+		# 	stock_entry_check()
+		
 		if self.auto_split_batch:
 			main_wh = frappe.db.get_single_value('Stock Settings', 'default_warehouse')
 			main_transit_wh = frappe.db.get_value('Warehouse', {'name': main_wh}, ['default_in_transit_warehouse'])

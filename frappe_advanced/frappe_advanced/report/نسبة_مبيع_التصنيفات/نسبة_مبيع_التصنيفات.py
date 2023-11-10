@@ -48,6 +48,36 @@ def get_data(filters):
 		filters,
 		as_dict=1)
 		
+		# invoice_item_dt = frappe.qb.DocType("Sales Invoice Item")
+		# group_dt = frappe.qb.DocType("Item Group")
+		# invoice_dt = frappe.qb.DocType("Sales Invoice")
+		# percent = (Count(invoice_item_dt.amount) 
+		# 	 * 100.0 / 
+		# 	 Sum(Count(invoice_item_dt.amount)).over(group_dt.parent_item_group)).as_("percentage")
+		
+		# childquery = (frappe.qb
+		# 		.from_(invoice_item_dt)
+		# 		.from_(group_dt)
+		# 		.from_(invoice_dt)
+		# 		.select(
+		# 			invoice_item_dt.item_group.as_("item_group"),
+		# 			Sum(invoice_item_dt.amount).as_("total_amount"),
+		# 			Sum(invoice_item_dt.qty).as_("total_qty"),
+		# 			percent,
+		# 			ConstantColumn(1).as_("indent"),
+		# 			ConstantColumn(0).as_("has_value")
+		# 		)
+		# 		.where(group_dt.name == invoice_item_dt.item_group)
+		# 		.where(invoice_dt.name == invoice_item_dt.parent)
+		# 		.where(group_dt.parent_item_group == parent)
+		# 		.where(invoice_dt.posting_date >= filters.get("from_date"))
+		# 		.where(invoice_dt.posting_date <= filters.get("to_date"))
+		# 		.where(invoice_item_dt.warehouse == userWarehouse)
+		# 		.groupby(invoice_item_dt.item_group)
+		# 		.orderby(percent)
+		# 	).run(as_dict=1)
+		
+		# child_data = childquery #used to switch between frappe.qb result and frappe.db.sql result
 		if child_data:
 			data.append(parent)
 			data.extend(child_data)

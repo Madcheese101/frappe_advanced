@@ -151,7 +151,6 @@ doc_events = {
 #	]
 # }
 scheduler_events = {
-
 	"cron": {
         # run at 12PM
 		"0 12 * * *": [
