@@ -31,7 +31,7 @@ app_include_js = ["frappe_advanced.bundle.js"]
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
 # page_js = {"print" : "printing/page/print/custom_print.js"}
-page_js = {"print" : "page.bundle.js"}
+# page_js = {"print" : "page.bundle.js"}
 
 
 # include js in doctype views
