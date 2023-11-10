@@ -238,7 +238,6 @@ fixtures = [
                 "name",
                 "in",
                 (
-                    "Letter Head-branch",
                     "Account-branch",
                     "Employee-default_in_transit_warehouse",
                     "Employee-default_warehouse",
