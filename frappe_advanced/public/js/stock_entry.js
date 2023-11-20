@@ -43,7 +43,7 @@ frappe.ui.form.on('Stock Entry', {
                         options: 'Branch'
                     }, (values) => {
                         frm.call({
-            					method: 'frappe_advanced.frappe_advanced.api.bhc_api.set_title',
+            					method: 'frappe_advanced.frappe_advanced.api.api.set_title',
             					args: {
                                     title: values.branch,
                                     doc_name: frm.doc.name
