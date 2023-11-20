@@ -246,6 +246,7 @@ fixtures = [
                     "Branch-parent_account",
                     "Branch-letter_head",
                     "Branch-mode_of_payment",
+                    "Stock Entry-title",
                 ),
             ]
         ]
@@ -262,6 +263,7 @@ fixtures = [
                     "Payment Entry-naming_series-default",
                     "Payment Entry-naming_series-options",
                     "Stock Entry-stock_entry_type-default",
+                    "Stock Entry-main-title_field",
                 ),
             ]
         ]
