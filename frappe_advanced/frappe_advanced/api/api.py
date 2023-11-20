@@ -10,7 +10,7 @@ def get_current_user_defaults():
         branch, default_warehouse, default_in_transit_warehouse = frappe.db.get_value('Employee', {'user_id': frappe.session.user}, 
                                                                                       ['branch', 'default_warehouse', 
                                                                                        'default_in_transit_warehouse'])
-        letter_head = frappe.db.get_value('Letter Head', {'branch': branch}, ['name'])
+        letter_head = frappe.db.get_value('Branch', branch, ['letter_head'])
   
     return {"branch": branch or "",
             "default_warehouse": default_warehouse or "", 
