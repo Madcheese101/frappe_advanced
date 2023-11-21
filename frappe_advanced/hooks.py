@@ -119,7 +119,8 @@ doc_events = {
 	},
     "Payment Entry": {
 		"on_submit": "frappe_advanced.crud_events.warning_events.partial_balance_transfer",
-        "before_submit": "frappe_advanced.crud_events.warning_events.validate_write_off_limit"
+        "before_submit": "frappe_advanced.crud_events.warning_events.validate_write_off_limit",
+        "validate": "frappe_advanced.crud_events.events.check_open_posa_shifts"
 	},
     "Stock Entry": {
         "on_submit": "frappe_advanced.crud_events.events.split_batch_on_recieve",

@@ -65,3 +65,26 @@ def update_user_permissions_event(doc, method = None):
                     add_user_permission("POS Profile", doc.name, pu.user)
                     add_user_permission("Warehouse", doc.warehouse, pu.user, applicable_for="Sales Invoice")
             frappe.clear_cache()
+
+def check_open_posa_shifts(doc, method = None):
+    posawesome_exists = "posawesome" in frappe.get_installed_apps()
+    posProfile =  frappe.db.get_list('POS Profile',
+                            pluck="name")
+    
+    if (doc.doctype == "Payment Entry" and 
+        posawesome_exists and
+        posProfile and 
+        len(posProfile) == 1):
+        
+        filters = {'status': 'Open', 
+                    'docstatus': 1,
+                    'pos_profile': posProfile[0],
+                    'posting_date': doc.posting_date,
+                    'pos_closing_shift': ['in', ['', None]]}
+        opening_shifts =  frappe.db.get_all('POS Opening Shift',
+                            filters=filters,
+                            pluck="name")
+        
+        if len(opening_shifts) > 0:
+             frappe.throw("الرجاء إغلاق منوابات الموظفين أولا")
+        
