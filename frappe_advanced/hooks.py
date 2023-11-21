@@ -265,6 +265,7 @@ fixtures = [
                     "Payment Entry-naming_series-options",
                     "Stock Entry-stock_entry_type-default",
                     "Stock Entry-main-title_field",
+                    "Note Count-main-default_print_format"
                 ),
             ]
         ]
