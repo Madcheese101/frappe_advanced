@@ -55,6 +55,7 @@ def auto_close_shift():
                         payment.difference = 0
                         
                     submit_closing_shift(vars(closing_doc))
+                frappe.msgprint("تم إغلاق مناوبات الموظفين")
             else:
                 frappe.msgprint('لا يوجد مناوبات لإغلاقها')
         else:
