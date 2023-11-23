@@ -2,7 +2,24 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Note Count', {
-	validate: function(frm) {
+	before_submit: async function(frm){
+        if(frm.doc.payment_type == "Cash"){
+            await new Promise(function(resolve, reject) {
+                let line_one = 'لضمان أداء أفضل لقاعدة البيانات سيتم حذف الفئات ذات العدد صفر'
+                let line_two = 'هل توافق على هذه العملية؟'
+                frappe.confirm(line_one+'<br>'+line_two,
+                    () => {
+                        // action to perform if Yes is selected                   
+                        frm.call('remove_zero_notes').then(r=>{
+                            resolve(true); })
+                    }, () => {
+                        // action to perform if No is selected
+                        reject();
+                    })
+            });
+        }
+    },
+    validate: function(frm) {
         if(frm.doc.total_field===0) {
             msgprint('لا يمكن أن يكون اجمالي الإيداع صفر');
             validated = false;

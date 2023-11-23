@@ -32,6 +32,12 @@ class NoteCount(Document):
 				self.append("cash_table", {'note': 20,'count': 0})
 				self.append("cash_table", {'note': 50,'count': 0})
 
+	@frappe.whitelist()
+	def remove_zero_notes(self):		
+		if self.get("cash_table"):
+			self.set("cash_table",[d for d in self.cash_table if d.count != 0])
+		return True
+
 	
 	@frappe.whitelist()
 	def calculate_cash_sum(self):
