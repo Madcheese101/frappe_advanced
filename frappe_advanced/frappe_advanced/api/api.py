@@ -1,6 +1,9 @@
 from __future__ import unicode_literals
 import frappe
 from frappe import _
+from erpnext.accounts.utils import get_balance_on
+from frappe.utils import today
+
 
 @frappe.whitelist()
 def get_current_user_defaults():
@@ -60,3 +63,30 @@ def auto_close_shift():
                 frappe.msgprint('لا يوجد مناوبات لإغلاقها')
         else:
             frappe.msgprint('المستخدم ليس موظف مبيعات')
+
+@frappe.whitelist()
+def get_current_balance_msg():
+    # frappe.throw(today())
+    msg = ''
+    parent_accounts = frappe.db.get_list("Account",
+                       filters={
+                           'is_group': 1,
+                           'account_number': ['in', [1112,1115,
+                                                     1116,1117,
+                                                     1119,1121]]
+                           },
+                       fields=['account_name', 'name'])
+    
+    for parent in parent_accounts:
+        msg += parent.account_name + ': <br>' + '<ul>'
+        child_accounts = frappe.db.get_list("Account",
+                       filters={
+                           'is_group': 0,
+                           'parent_account': parent.name
+                           },
+                       fields=['account_name', 'name'])
+        for child in child_accounts:
+            balance = get_balance_on(child.name, today(), ignore_account_permission=True) or 0
+            msg += f'<li>{child.account_name}: {frappe.format_value(balance, {"fieldtype":"Currency"})} </li>'
+        msg += '</ul>'
+    frappe.msgprint(msg)
