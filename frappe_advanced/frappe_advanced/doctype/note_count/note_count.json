@@ -257,8 +257,13 @@
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2023-11-21 22:16:47.023759",
+ "links": [
+  {
+   "link_doctype": "Payment Entry",
+   "link_fieldname": "note_count"
+  }
+ ],
+ "modified": "2023-11-27 16:34:16.141566",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Note Count",
