@@ -68,14 +68,23 @@ def auto_close_shift():
 def get_current_balance_msg():
     # frappe.throw(today())
     msg = ''
-    parent_accounts = frappe.db.get_list("Account",
-                       filters={
-                           'is_group': 1,
-                           'account_number': ['in', [1112,1115,
-                                                     1116,1117,
-                                                     1119,1121]]
-                           },
-                       fields=['account_name', 'name'])
+    parent_accounts = None
+    branch = frappe.db.get_value('Employee', {'user_id': frappe.session.user}, ['branch'])
+    if branch:
+        parent_accounts = frappe.db.get_list('Branch', 
+                            filters={
+                                'name': branch,
+                                },
+                            fields=['parent_account as name', 'parent_account as account_name'])
+    else:
+        parent_accounts = frappe.db.get_list("Account",
+                        filters={
+                            'is_group': 1,
+                            'account_number': ['in', [1112,1115,
+                                                        1116,1117,
+                                                        1119,1121]]
+                            },
+                        fields=['account_name', 'name'])
     
     for parent in parent_accounts:
         msg += parent.account_name + ': <br>' + '<ul>'
