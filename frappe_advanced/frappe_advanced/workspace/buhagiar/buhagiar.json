@@ -10,7 +10,7 @@
  "icon": "color-review-points",
  "idx": 0,
  "is_hidden": 0,
- "label": "Abuhjair",
+ "label": "Buhagiar",
  "links": [
   {
    "hidden": 0,
@@ -208,7 +208,7 @@
  "modified": "2023-12-02 16:47:01.562961",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
- "name": "Abuhjair",
+ "name": "Buhagiar",
  "number_cards": [
   {
    "label": "Account not Transferred",
@@ -271,5 +271,5 @@
    "type": "Report"
   }
  ],
- "title": "Abuhjair"
+ "title": "Buhagiar"
 }
