@@ -40,31 +40,38 @@ def update_user_permissions_event(doc, method = None):
                                          pluck= "user")
         if pos_users:
             for pu in pos_users:
-                if(pu.user in other_pos_users):
-                    frappe.db.delete("POS Profile User", {
-                        "parent": ["!=", doc.name],
-                        "user": pu.user
-                    })
-                
-                permissions_pos = frappe.db.get_value("User Permission",
-                        {"user":pu.user, "allow": "POS Profile"},
-                        ["for_value"]
-                    )
-
-                if(permissions_pos != doc.name):
-                    permissions = frappe.db.get_list("User Permission",
-                            filters={"user":pu.user, "allow": ["in",doc_list]},
-                            pluck="name"
-                        )
-                    if permissions:
-                        for p in permissions:
-                            frappe.delete_doc("User Permission", p)
-                    
-                    for payment in doc.get("payments"):
-                        add_user_permission("Mode of Payment", payment.mode_of_payment, pu.user)
-                    add_user_permission("POS Profile", doc.name, pu.user)
-                    add_user_permission("Warehouse", doc.warehouse, pu.user, applicable_for="Sales Invoice")
+               roles = frappe.get_roles(pu.user)
+               if "Accounts Manager" not in roles:
+                    process_permissions(doc, pu.user, other_pos_users, doc_list)
             frappe.clear_cache()
+
+def process_permissions(doc, user, other_pos_users, doc_list):
+    if(user in other_pos_users):
+                frappe.db.delete("POS Profile User", {
+                    "parent": ["!=", doc.name],
+                    "user": user
+                })
+            
+    permissions_pos = frappe.db.get_value("User Permission",
+            {"user":user, "allow": "POS Profile"},
+            ["for_value"]
+        )
+
+    if(permissions_pos != doc.name):
+        permissions = frappe.db.get_list("User Permission",
+                filters={"user":user, "allow": ["in",doc_list]},
+                pluck="name"
+            )
+        if permissions:
+            for p in permissions:
+                frappe.delete_doc("User Permission", p)
+        is_accounts_user = "Accounts User" in frappe.get_roles(user)
+
+        if is_accounts_user:
+            for payment in doc.get("payments"):
+                add_user_permission("Mode of Payment", payment.mode_of_payment, user)
+        add_user_permission("POS Profile", doc.name, user)
+        add_user_permission("Warehouse", doc.warehouse, user, applicable_for="Sales Invoice")
 
 def check_open_posa_shifts(doc, method = None):
     posawesome_exists = "posawesome" in frappe.get_installed_apps()
