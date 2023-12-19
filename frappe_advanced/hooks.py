@@ -129,7 +129,10 @@ doc_events = {
     "POS Profile": {
 		"after_insert": "frappe_advanced.crud_events.events.update_user_permissions_event",
         "on_update": "frappe_advanced.crud_events.events.update_user_permissions_event"
-	}
+	},
+    "Item": {
+        "after_insert": "frappe_advanced.crud_events.events.generate_item_barcode"
+    }
 }
 # Scheduled Tasks
 # ---------------
@@ -176,6 +179,10 @@ scheduler_events = {
 # override_whitelisted_methods = {
 #	"frappe.desk.doctype.event.event.get_events": "frappe_advanced.event.get_events"
 # }
+override_whitelisted_methods = {
+    "erpnext.controllers.item_variant.create_variant": "frappe_advanced.frappe_advanced.api.api.create_variant",
+    "erpnext.controllers.item_variant.enqueue_multiple_variant_creation": "frappe_advanced.frappe_advanced.api.api.enqueue_multiple_variant_creation"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
@@ -248,6 +255,7 @@ fixtures = [
                     "Branch-letter_head",
                     "Branch-mode_of_payment",
                     "Stock Entry-title",
+                    "auto_items_barcode"
                 ),
             ]
         ]

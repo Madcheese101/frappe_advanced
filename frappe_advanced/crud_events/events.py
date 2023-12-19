@@ -87,4 +87,26 @@ def check_open_posa_shifts(doc, method = None):
         
         if len(opening_shifts) > 0:
              frappe.throw("الرجاء إغلاق منوابات الموظفين أولا")
-        
+
+@frappe.whitelist()
+def generate_item_barcode(doc, method):
+	
+	stock_settings = frappe.get_doc('Stock Settings')
+	if not stock_settings.auto_items_barcode:
+		return
+	
+	if not stock_settings.show_barcode_field:
+		frappe.msgprint(_('Make sure to Show Barcode Field from Stock Settings'))
+	
+	barcode = "".join("{}".format(doc.item_code).split('.'))
+	barcode = "".join("{}".format(barcode).split('-'))
+
+	if len(barcode) < 10:
+		barcode = "{}{}".format("".join(['0' for i in range(10-len(barcode))]), barcode)
+
+	doc.append('barcodes', {
+		'barcode': barcode
+	})
+
+	doc.save()
+	frappe.db.commit()
