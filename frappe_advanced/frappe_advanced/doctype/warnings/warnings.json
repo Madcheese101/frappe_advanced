@@ -25,6 +25,7 @@
   "account_balance",
   "last_transfer_date",
   "transferred_amount",
+  "remaining_amount",
   "write_off_limit",
   "write_off_amount_inserted",
   "amended_from"
@@ -179,11 +180,18 @@
    "in_list_view": 1,
    "label": "Items",
    "read_only": 1
+  },
+  {
+   "fieldname": "remaining_amount",
+   "fieldtype": "Currency",
+   "label": "Remaining Amount",
+   "precision": "2",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-03 18:31:51.079845",
+ "modified": "2023-12-20 20:52:28.650359",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Warnings",

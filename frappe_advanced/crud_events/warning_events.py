@@ -27,15 +27,14 @@ def partial_balance_transfer(doc, method=None):
             
             if(doc.payment_type == "Internal Transfer" 
             and doc.paid_from_account_balance > doc.paid_amount):
-            
+                remaining_amount = doc.paid_from_account_balance - doc.paid_amount
                 employee = get_user_fullname(frappe.session.user)
                 branch = frappe.get_value("Employee",{'user_id': frappe.session.user}, ['branch'])
                 last_warning = frappe.db.exists('Warnings',
                                                         {'warning_type':'Partial Account Transfer',
-                                                            'payment_entry':doc.name,
-                                                            'account_balance':doc.paid_from_account_balance,
-                                                            'transferred_amount':doc.paid_amount,
-                                                            'account_name':doc.paid_from})
+                                                            'account_name':doc.paid_from,
+                                                            'status': 'Pending Review',
+                                                            'remaining_amount':remaining_amount})
                 
                 if(not last_warning):
                     insert_warning(warning_type="Partial Account Transfer",employee=employee,
@@ -43,7 +42,8 @@ def partial_balance_transfer(doc, method=None):
                                 payment_entry=doc.name,
                                 account_name=doc.paid_from,
                                 account_balance=doc.paid_from_account_balance,
-                                transferred_amount=doc.paid_amount)
+                                transferred_amount=doc.paid_amount,
+                                remaining_amount=remaining_amount)
 
 # This is called before_submit and not on validation
 # since it requires the document to be saved to

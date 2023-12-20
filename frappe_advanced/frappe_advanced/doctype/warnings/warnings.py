@@ -21,7 +21,7 @@ def insert_warning(warning_type,employee=None,
 		   account_name=None,account_balance=None,
 		   last_transfer_date=None,transferred_amount=None,
 		   write_off_limit=None,write_off_amount_inserted=None,
-		   items=''):
+		   items='', remaining_amount=None):
 	warning = frappe.get_doc(doctype='Warnings',
 				warning_type=warning_type,
 				employee=employee,
@@ -34,7 +34,8 @@ def insert_warning(warning_type,employee=None,
 				transferred_amount=transferred_amount,
 				write_off_limit=write_off_limit,
 				write_off_amount_inserted=write_off_amount_inserted,
-				items=items)
+				items=items,
+				remaining_amount=remaining_amount)
 	warning.insert(ignore_permissions=True)
 	frappe.db.commit()
 	return warning
