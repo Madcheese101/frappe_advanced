@@ -59,7 +59,8 @@ def make_xlsx(data, sheet_name, wb=None, column_widths=None):
 
 	# set the worksheet's sheet_view attribute to the new SheetView object
 	ws.sheet_view.rightToLeft = True
-
+	ws.freeze_panes = 'A2'
+	
 	xlsx_file = BytesIO()
 	wb.save(xlsx_file)
 	return xlsx_file
