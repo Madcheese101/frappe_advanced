@@ -6,10 +6,14 @@ frappe.ui.form.on('Compare Stock Count', {
 		frm.disable_save();
 	},
 	export_excel: function(frm) {
-		const args = {
-			cmd: "frappe_advanced.frappe_advanced.doctype.compare_stock_count.compare_stock_count.start_export",
-			item_group: frm.doc.item_group
+		let item_group = frm.doc.item_group || 0;
+		let argss = {
+			cmd: "frappe_advanced.frappe_advanced.doctype.compare_stock_count.compare_stock_count.start_export"
 		};
+		if (item_group != 0){
+			argss["item_group"] = item_group;
+		}
+		const args = argss;
 		open_url_post(frappe.request.url, args);
 	},
 	setup: function(frm){
