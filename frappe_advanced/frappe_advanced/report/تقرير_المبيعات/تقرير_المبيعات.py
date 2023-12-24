@@ -5,9 +5,14 @@
 from __future__ import unicode_literals
 import frappe
 from frappe import _, _dict
+from datetime import datetime
+from frappe.utils import getdate
 
 def execute(filters=None):
 	data = []
+	filters["from_date_time"] = f"{filters.from_date} 00:00:00"
+	filters["to_date_time"] = f"{filters.to_date} 23:59:00"
+	
 	columns = get_columns(filters)
 	data = get_data(filters)
 	# frappe.throw(data)
@@ -104,7 +109,7 @@ def get_detailed_data(filters, payment_mode):
 	WHERE
 		e.user_id = sp.owner
 		AND sp.mode_of_payment = %(mode_of_payment)s
-		AND sp.modified BETWEEN %(from_date)s AND %(to_date)s
+		AND sp.modified BETWEEN %(from_date_time)s AND %(to_date_time)s
 		AND sp.docstatus = 1
 	ORDER BY
 		date DESC""",
@@ -126,7 +131,7 @@ def get_employee_data(filters, payment_mode):
 	WHERE
 		e.user_id = sp.owner
 		AND sp.mode_of_payment = %(mode_of_payment)s
-		AND sp.modified BETWEEN %(from_date)s AND %(to_date)s
+		AND sp.modified BETWEEN %(from_date_time)s AND %(to_date_time)s
 		AND sp.docstatus = 1
 	Group By e.owner
 	ORDER BY
