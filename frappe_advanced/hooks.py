@@ -250,6 +250,7 @@ fixtures = [
                     "Employee-default_warehouse",
                     "Property Setter-dont_replace",
                     "Payment Entry-note_count",
+                    "Payment Entry-count_total",
                     "Branch-warehouse",
                     "Branch-parent_account",
                     "Branch-letter_head",

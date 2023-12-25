@@ -21,7 +21,7 @@ frappe.ui.form.on('Payment Entry', {
             '<p><span style="color: #ff0000;">ACC-INT-.YYYY.-</span></p>');
             validated = false;
         }
-        if(frappe.user.has_role('Accounts Manager') === false){
+        if(!frappe.user.has_role('Accounts Manager')){
             if(frm.doc.payment_type =='Internal Transfer' && !frm.doc.note_count.includes(frm.doc.mode_of_payment)) {
                 msgprint('يجب ان يكون نوع طريقة الإيداع مطابق لطريقة الدفع');
                 validated = false;
@@ -32,7 +32,13 @@ frappe.ui.form.on('Payment Entry', {
                 '<p><span style="color: #ff0000;">الرجاء المراجعة مع قسم المحاسبة/الإدارة</span></p>')
                 validated = false;
             }
+            if(frm.doc.payment_type =='Internal Transfer' && 
+            frm.doc.received_amount != frm.doc.count_total){
+                msgprint('<p>يجب ان يكون اجمالي ورقة عد الفئات مطابق لخانة الرصيد المستلم</p>')
+                validated = false;
+            }
         }
+        console.log(frappe.user.has_role('Accounts Manager'))
     },
     payment_type: function(frm) {
         // frm.toggle_reqd('note_count',  frm.doc.payment_type ==='Internal Transfer' && frappe.user_roles.includes("Payment Entry (C)"));
@@ -55,6 +61,11 @@ frappe.ui.form.on('Payment Entry', {
     note_count: function(frm) {
         if(frm.doc.payment_type ==='Internal Transfer' && frm.doc.paid_from_account_balance !== 0){
             frm.set_value("paid_amount",frm.doc.paid_from_account_balance);
+        }
+    },
+    paid_amount: function(frm) {
+        if(frm.doc.payment_type ==='Internal Transfer'){
+            frm.set_value("received_amount",frm.doc.count_total);
         }
     },
 	mode_of_payment:function(frm) {
