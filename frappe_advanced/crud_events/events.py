@@ -10,6 +10,7 @@ from frappe.permissions import (
 def stock_entry_set_default_from_target(doc, method=None):
         if not doc.from_warehouse and doc.outgoing_stock_entry and doc.purpose == "Material Transfer":
                 doc.from_warehouse = doc.get("items")[0].s_warehouse
+                doc.to_warehouse = doc.get("items")[0].t_warehouse
 
 def split_batch_on_recieve(doc, method=None):
         auto_split_enabled = frappe.db.get_single_value('Advanced Settings', 'auto_split_batch')
