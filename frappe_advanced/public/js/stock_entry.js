@@ -32,6 +32,7 @@ frappe.ui.form.on('Stock Entry', {
             frm.add_custom_button(__('Print Recieve Order'), function(){
                 frm.print_doc("أمر إستلام", branch);
             });
+            frm.remove_custom_button('End Transit');
         }
 
         if(!frm.doc.outgoing_stock_entry && !frm.is_new()){
