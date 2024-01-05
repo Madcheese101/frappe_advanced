@@ -194,3 +194,14 @@ def make_variant_item_code(template_item_code, template_item_name, variant):
 		variant.item_name = "{0}-{1}".format(template_item_name, "-".join(values))
 	elif abbreviations:
 		variant.item_name = "{0}-{1}".format(template_item_name, "-".join(abbreviations))
+
+
+@frappe.whitelist()
+def submit_doc(document):
+	load_doc = json.loads(document)
+	# frappe.msgprint(load_doc["doctype"])
+	doc = frappe.get_doc(load_doc)
+	doc.save()
+	doc.submit()
+	if doc.doctype == "Stock Entry":
+		doc.db_set('add_to_transit', 0)
