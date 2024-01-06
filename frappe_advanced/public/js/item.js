@@ -52,8 +52,7 @@ erpnext.stock.manage_hold = async function (item, source, target, actual_qty, ra
 			label: __('Branch'),
 			fieldtype: 'Link',
 			options: 'Branch',
-			reqd: transit,
-			hidden: !transit
+			reqd: 1
 		},	
 		{
 			fieldname: 'item_code',
@@ -131,15 +130,20 @@ erpnext.stock.manage_hold = async function (item, source, target, actual_qty, ra
 			return;
 		}
 
+		if (dialog.get_value("branch") === "") {
+			frappe.msgprint(__("يجب تحديد فرع المحل أولا"));
+			return;
+		}
+
 		frappe.model.with_doctype('Stock Entry', function () {
 			let doc = frappe.model.get_new_doc('Stock Entry');
 			doc.from_warehouse = dialog.get_value('source');
 			doc.to_warehouse = dialog.get_value('target');
 			doc.stock_entry_type = "Material Transfer";
-			if(transit == 1){
-				doc.title = dialog.get_value('branch');
+			if (transit === 0){
+				doc.title = `حجز - ${dialog.get_value('branch')}`;
 			}
-			
+			else{ doc.title = dialog.get_value('branch') }
             
             let row = frappe.model.add_child(doc, 'items');
 			row.item_code = dialog.get_value('item_code');
