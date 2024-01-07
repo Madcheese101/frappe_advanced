@@ -123,6 +123,12 @@ frappe.ui.form.on('Note Count', {
 
         frm.toggle_display("is_advance",
             (frm.doc.has_advance_note_count == false && frm.doc.payment_type == "Cash"));
+
+
+        frm.toggle_display("add_notes",
+            (frm.doc.docstatus !== 1));
+        frm.toggle_display("remove_notes",
+            (frm.doc.docstatus !== 1));
     },
     add_notes:function(frm){
         frm.call('set_table');
