@@ -104,6 +104,7 @@ frappe.ui.form.on('Payment Entry', {
 			return {
 				filters: [
                     ["Note Count", "docstatus", "=", 1],
+                    ["Note Count", "is_advance", "=", 0],
 				]
 			}
 		});
