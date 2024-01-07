@@ -82,6 +82,7 @@ def check_open_posa_shifts(doc, method = None):
     if (doc.doctype == "Payment Entry" and 
         posawesome_exists and
         posProfile and 
+        doc.payment_type == _("Internal Transfer") and
         len(posProfile) == 1):
         
         filters = {'status': 'Open', 

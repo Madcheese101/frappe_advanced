@@ -38,7 +38,6 @@ frappe.ui.form.on('Payment Entry', {
                 validated = false;
             }
         }
-        console.log(frappe.user.has_role('Accounts Manager'))
     },
     payment_type: function(frm) {
         // frm.toggle_reqd('note_count',  frm.doc.payment_type ==='Internal Transfer' && frappe.user_roles.includes("Payment Entry (C)"));
