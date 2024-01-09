@@ -46,7 +46,7 @@ def get_data(filters):
 			'status':"Submitted",
 			'mode_of_payment':payment,
 			'posting_date':["between", (filters.get("from_date"),filters.get("to_date"))],
-			"payment_type":_("Internal Transfer")}
+			"payment_type": "Internal Transfer"}
 			,order_by='posting_date desc'
 			,group_by="mode_of_payment")
 		if(head):
@@ -71,7 +71,7 @@ def get_data(filters):
 			'status':"Submitted",
 			'mode_of_payment':payment,
 			'posting_date':["between", (filters.get("from_date"),filters.get("to_date"))],
-			"payment_type":_("Internal Transfer")}
+			"payment_type": "Internal Transfer"}
 			,order_by='posting_date desc')
 
 		data.extend(node_data)
