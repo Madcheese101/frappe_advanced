@@ -256,8 +256,10 @@ fixtures = [
                     "Branch-parent_account",
                     "Branch-letter_head",
                     "Branch-mode_of_payment",
+                    "Branch-expenses_account",
+                    "Branch-cost_center",
                     "Stock Entry-title",
-                    "auto_items_barcode"
+                    "auto_items_barcode",
                 ),
             ]
         ]

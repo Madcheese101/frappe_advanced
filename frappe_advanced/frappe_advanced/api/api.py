@@ -105,7 +105,21 @@ def get_current_balance_msg():
             msg += f'<li>{child.account_name}: {frappe.format_value(balance, {"fieldtype":"Currency"})} </li>'
         msg += '</ul>'
     frappe.msgprint(msg)
-
+	
+@frappe.whitelist()
+def custody_account_balance():
+	branch = []
+	if(frappe.session.user != "Administrator"):
+			branch = frappe.db.get_value('Employee', 
+					   {'user_id': frappe.session.user}, ['branch'])
+	if branch:
+		branch_expenses = frappe.db.get_value('Branch', 
+						branch, ['expenses_account'])
+		balance = get_balance_on(branch_expenses, today(), ignore_account_permission=True) or 0
+		frappe.msgprint(str(balance) + " دينار")	
+	else:
+		frappe.msgprint("حقل فرع الشركة للمستخدم غير محدد")
+				
 @frappe.whitelist()
 def enqueue_multiple_variant_creation(item, args):
 	# There can be innumerable attribute combinations, enqueue
