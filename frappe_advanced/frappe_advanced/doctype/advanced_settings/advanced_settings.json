@@ -12,7 +12,7 @@
   "stock_entry_not_accepted_warning",
   "auto_close_shift",
   "account_transfer_days_limit",
-  "stock_entry_days_limit",
+  "days_to_warn",
   "column_break_dlrqu",
   "write_off_limit_warning",
   "canceled_sales_invoice_warning",
@@ -99,11 +99,6 @@
    "label": "Stock Entry Not Accepted Warning"
   },
   {
-   "fieldname": "stock_entry_days_limit",
-   "fieldtype": "Int",
-   "label": "Stock Entry Accepted (Days to Warn)"
-  },
-  {
    "fieldname": "batch_settings_section",
    "fieldtype": "Section Break",
    "label": "Batch Settings"
@@ -140,12 +135,18 @@
    "fieldname": "draft_invoice_warning",
    "fieldtype": "Check",
    "label": "Draft Invoice Warning"
+  },
+  {
+   "description": "For: Stock Entry not Accepted, Draft Invoice",
+   "fieldname": "days_to_warn",
+   "fieldtype": "Int",
+   "label": "Other Warnings Task Interval (Days to Warn)"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-02-22 17:12:56.788922",
+ "modified": "2024-02-22 18:36:34.929161",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Advanced Settings",

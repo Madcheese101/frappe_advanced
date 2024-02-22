@@ -77,7 +77,7 @@ def insert_account_closed_warning(account, today, days_limit):
 
 def stock_entry_check():
     if frappe.db.get_single_value('Advanced Settings', 'stock_entry_not_accepted_warning'):        
-        days_limit = frappe.db.get_single_value('Advanced Settings', 'stock_entry_days_limit')
+        days_limit = frappe.db.get_single_value('Advanced Settings', 'days_to_warn')
         today = (datetime.today()).date()
         branch_list = frappe.db.get_list('Branch', fields=['name'], pluck="name") or []
 
@@ -113,7 +113,7 @@ def stock_entry_check():
 @frappe.whitelist()
 def draft_invoice_check():
     if frappe.db.get_single_value('Advanced Settings', 'draft_invoice_warning'):        
-        days_limit = frappe.db.get_single_value('Advanced Settings', 'stock_entry_days_limit')
+        days_limit = frappe.db.get_single_value('Advanced Settings', 'days_to_warn')
         today = (datetime.today()).date()
 
         if(days_limit and days_limit > 0):    
