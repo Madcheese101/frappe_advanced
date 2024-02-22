@@ -36,7 +36,7 @@
    "fieldtype": "Select",
    "in_standard_filter": 1,
    "label": "Warning Type",
-   "options": "Canceled Sales Invoice\nWrite-Off Limit Exceeded\nAccount not Transferred\nPartial Account Transfer\nStock Entry not Accepted\nExceeded Discount Percentage",
+   "options": "Canceled Sales Invoice\nWrite-Off Limit Exceeded\nAccount not Transferred\nPartial Account Transfer\nStock Entry not Accepted\nExceeded Discount Percentage\nDraft Invoice",
    "read_only": 1,
    "translatable": 1
   },
@@ -157,6 +157,7 @@
    "read_only": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "default": "Pending Review",
    "fieldname": "status",
    "fieldtype": "Select",
@@ -191,7 +192,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-20 20:52:28.650359",
+ "modified": "2024-02-22 17:15:52.696025",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Warnings",
@@ -206,6 +207,7 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "select": 1,
    "share": 1,
    "write": 1
   }

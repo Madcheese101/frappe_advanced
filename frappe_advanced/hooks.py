@@ -161,6 +161,7 @@ scheduler_events = {
 		"0 12 * * *": [
             "frappe_advanced.frappe_advanced.tasks.tasks.account_closed_check",
             "frappe_advanced.frappe_advanced.tasks.tasks.stock_entry_check",
+            "frappe_advanced.frappe_advanced.tasks.tasks.draft_invoice_check"
 		],
         # run at 12AM
         "0 0 * * *":[

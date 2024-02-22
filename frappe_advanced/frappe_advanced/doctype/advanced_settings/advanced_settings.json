@@ -17,6 +17,7 @@
   "write_off_limit_warning",
   "canceled_sales_invoice_warning",
   "exceeded_discount_percentage",
+  "draft_invoice_warning",
   "write_off_limit",
   "exclude_account_numbers",
   "note_count_settings_section",
@@ -133,12 +134,18 @@
    "fieldname": "auto_close_shift",
    "fieldtype": "Check",
    "label": "Auto Close Shift"
+  },
+  {
+   "default": "0",
+   "fieldname": "draft_invoice_warning",
+   "fieldtype": "Check",
+   "label": "Draft Invoice Warning"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-09 15:39:04.672792",
+ "modified": "2024-02-22 17:12:56.788922",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Advanced Settings",

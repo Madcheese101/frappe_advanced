@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import frappe
 from frappe import _
@@ -78,39 +78,64 @@ def insert_account_closed_warning(account, today, days_limit):
 def stock_entry_check():
     if frappe.db.get_single_value('Advanced Settings', 'stock_entry_not_accepted_warning'):        
         days_limit = frappe.db.get_single_value('Advanced Settings', 'stock_entry_days_limit')
-        today = datetime.today().date()
-        branch_list = frappe.db.get_list('Branch', fields=['name'], pluck="name")
+        today = (datetime.today()).date()
+        branch_list = frappe.db.get_list('Branch', fields=['name'], pluck="name") or []
 
-        if(days_limit and days_limit > 0):          
+        if(days_limit and days_limit > 0):
+            date = today - timedelta(days=days_limit)      
             filters = {'per_transferred': ['<', 100],
                         'add_to_transit': 1,
                         'outgoing_stock_entry': '',
-                        'docstatus': 1}
+                        'docstatus': 1,
+                        'posting_date': ["<=", date]}
             
             stock_entries = frappe.db.get_list('Stock Entry', 
                                         fields=['name','title','posting_date', 'outgoing_stock_entry'],
                                         filters=filters,
-                                        order_by="posting_date desc")
-            if(stock_entries):
-                for stock_entry in stock_entries:
-                    last_warning = frappe.db.get_value('Warnings',
-                                            {'warning_type':'Stock Entry not Accepted',
-                                                'stock_entry':stock_entry.name,
-                                                'status': 'Pending Review'},
-                                                ['date']
-                                                )
-                    if stock_entry.title not in branch_list:
-                        stock_entry.title = None
+                                        order_by="posting_date desc") or []
+            for stock_entry in stock_entries:
+                last_warning = frappe.db.get_value('Warnings',
+                                        {'warning_type':'Stock Entry not Accepted',
+                                            'stock_entry':stock_entry.name,
+                                            'status': 'Pending Review'},
+                                            ['date']
+                                            )
+                if stock_entry.title not in branch_list:
+                    stock_entry.title = None
 
-                    if not last_warning:
-                        days_diff = (today - stock_entry.posting_date).days
-                        
-                        if ((days_diff > days_limit) and not last_warning):
-                            warning = frappe.get_doc(doctype='Warnings',
-                                                warning_type='Stock Entry not Accepted',
-                                                branch=stock_entry.title,
-                                                stock_entry=stock_entry.name)
-                            warning.insert(ignore_permissions=True)
+                if not last_warning:
+                    warning = frappe.get_doc(doctype='Warnings',
+                                        warning_type='Stock Entry not Accepted',
+                                        branch=stock_entry.title,
+                                        stock_entry=stock_entry.name)
+                    warning.insert(ignore_permissions=True)
+
+@frappe.whitelist()
+def draft_invoice_check():
+    if frappe.db.get_single_value('Advanced Settings', 'draft_invoice_warning'):        
+        days_limit = frappe.db.get_single_value('Advanced Settings', 'stock_entry_days_limit')
+        today = (datetime.today()).date()
+
+        if(days_limit and days_limit > 0):    
+            date = today - timedelta(days=days_limit)
+            filters = {'docstatus': 0, 'posting_date': ["<=", date]}
+            draft_invoices = frappe.db.get_list('Sales Invoice', 
+                                        fields=['name','title','posting_date'],
+                                        filters=filters,
+                                        order_by="posting_date desc") or []
+            for invoice in draft_invoices:
+                last_warning = frappe.db.get_value('Warnings',
+                                            {'warning_type':'Draft Invoice',
+                                                'sales_invoice':invoice.name,
+                                                'status': 'Pending Review'},
+                                            ['date']
+                                        )
+
+                if not last_warning:
+                    warning = frappe.get_doc(doctype='Warnings',
+                                        warning_type='Draft Invoice',
+                                        sales_invoice=invoice.name)
+                    warning.insert(ignore_permissions=True)
 
 @frappe.whitelist()
 def auto_close_shift():
