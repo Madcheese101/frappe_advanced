@@ -64,7 +64,7 @@ def get_result(filters, branch):
 	
 	result = get_result_as_list(data, custom_filters)
 	total = data[0].outcome
-	return result, total
+	return result, total or 0
 
 def get_gl_entries(filters, accounting_dimensions):
 	currency_map = get_currency(filters)
