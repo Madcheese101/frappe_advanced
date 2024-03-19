@@ -48,7 +48,7 @@ def get_data(report_filters):
 	
 	data.append({
 		"mode_of_payment": "الإجمالي التام",
-		"debit": grand_total})
+		"outcome": grand_total})
 	return data
 
 
@@ -63,13 +63,12 @@ def get_result(filters, branch):
 	data = get_data_with_opening_closing(custom_filters, gl_entries, branch)
 	
 	result = get_result_as_list(data, custom_filters)
-	total = data[0].debit
-	# result[0].gl_entry = branch
+	total = data[0].outcome
 	return result, total
 
 def get_gl_entries(filters, accounting_dimensions):
 	currency_map = get_currency(filters)
-	select_fields = """, gl.debit, credit, gl.debit_in_account_currency,
+	select_fields = """, gl.debit, gl.credit, (gl.debit - gl.credit) as outcome, gl.debit_in_account_currency,
 		gl.credit_in_account_currency"""
 
 	if filters.get("show_remarks"):
@@ -84,12 +83,10 @@ def get_gl_entries(filters, accounting_dimensions):
 
 	if filters.get("include_dimensions"):
 		order_by_statement = "order by gl.posting_date, gl.creation"
-
 	if filters.get("group_by") == "Group by Voucher":
 		order_by_statement = "order by posting_date, voucher_type, voucher_no"
 	if filters.get("group_by") == "Group by Account":
 		order_by_statement = "order by gl.account, gl.posting_date, gl.creation"
-
 	if filters.get("include_default_book_entries"):
 		filters["company_fb"] = frappe.db.get_value(
 			"Company", filters.get("company"), "default_finance_book"
@@ -130,6 +127,7 @@ def get_gl_entries(filters, accounting_dimensions):
 			LEFT JOIN `tabMode of Payment Account` mop
 			ON gl.account = mop.default_account
 		WHERE
+		gl.voucher_no not like '%%ACC-INT%%' and 
 		gl.company=%(company)s {conditions}
 		{order_by_statement}
 	""".format(
@@ -149,8 +147,7 @@ def get_gl_entries(filters, accounting_dimensions):
 
 def get_conditions(filters):
 	conditions = [
-		"gl.voucher_type in ('Sales Invoice', 'Payment Entry')",
-		"gl.debit > 0"
+		"gl.voucher_type in ('Sales Invoice', 'Payment Entry')"
 		]
 
 	if filters.get("account"):
@@ -295,6 +292,7 @@ def get_data_with_opening_closing(filters, gl_entries, branch):
 		data.append({
 			"mode_of_payment": gle_map[entry].mode_of_payment,
 			"debit":gle_map[entry].totals.total.debit,
+			"outcome":gle_map[entry].totals.total.outcome or 0.0,
 			"has_value": 1,
 			"indent": 1
 		})
@@ -304,10 +302,10 @@ def get_data_with_opening_closing(filters, gl_entries, branch):
 		if view_method == "employee_short":
 			if "users" in gle_map[entry]:
 				for key, value in gle_map[entry].users.items():
-					# frappe.msgprint(str(gle_map[entry].users))
 					data.append({
 						"employee": key,
 						"debit": value,
+						"outcome": value,
 						"has_value": 0,
 						"indent": 2
 					})
@@ -324,6 +322,10 @@ def get_accountwise_gle(filters, gl_entries, gle_map):
 	def update_value_in_dict(data, key, gle):
 		data[key].debit += gle.debit
 		data[key].credit += gle.credit
+		if "outcome" not in data[key].keys():
+			data[key]["outcome"] = gle.outcome
+		else:
+			data[key].outcome += gle.outcome
 
 		data[key].debit_in_account_currency += gle.debit_in_account_currency
 		data[key].credit_in_account_currency += gle.credit_in_account_currency
@@ -358,10 +360,10 @@ def get_accountwise_gle(filters, gl_entries, gle_map):
 					gle_map[group_by_value].users = {}
 				# add amount to user if exist
 				if gle.employee in gle_map[group_by_value].users:
-					gle_map[group_by_value].users[gle.employee] += gle.debit
+					gle_map[group_by_value].users[gle.employee] += gle.outcome
 				# create user with initial amount if not exist
 				else:
-					gle_map[group_by_value].users[gle.employee] = gle.debit
+					gle_map[group_by_value].users[gle.employee] = gle.outcome
 					
 				gle_map[group_by_value].mode_of_payment = (gle.mode_of_payment)
 				
@@ -395,7 +397,7 @@ def get_columns(filters):
 				"width": 150
 			},
 			{
-				"fieldname": "debit",
+				"fieldname": "outcome",
 				"label": _("إجمالي القيمة"),
 				"fieldtype": "Currency",
 				"width": 200,
@@ -412,7 +414,7 @@ def get_columns(filters):
 				"width": 200
 			},
 			{
-				"fieldname": "debit",
+				"fieldname": "outcome",
 				"label": _("إجمالي القيمة"),
 				"fieldtype": "Currency",
 				"width": 150,
@@ -427,7 +429,7 @@ def get_columns(filters):
 		])
 	else:
 		columns.append({
-				"fieldname": "debit",
+				"fieldname": "outcome",
 				"label": _("إجمالي القيمة"),
 				"fieldtype": "Currency",
 				"width": 200,
