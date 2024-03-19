@@ -126,8 +126,7 @@ def draft_invoice_check():
             for invoice in draft_invoices:
                 last_warning = frappe.db.get_value('Warnings',
                                             {'warning_type':'Draft Invoice',
-                                                'sales_invoice':invoice.name,
-                                                'status': 'Pending Review'},
+                                                'sales_invoice':invoice.name},
                                             ['date']
                                         )
 
