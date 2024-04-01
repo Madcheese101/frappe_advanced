@@ -41,14 +41,14 @@ def make_price_xlsx(data, sheet_name, wb=None, column_widths=None):
 
 		ws.append(clean_row)
 
-	for col in ['E', 'D']:
+	for col in ['E', 'F']:
 		for cell in ws[col]:
 			cell.number_format = '0.00'
 
 	rows = ws.max_row	
 
 	
-	ws.auto_filter.ref = f'A1:F{rows}'
+	ws.auto_filter.ref = f'A1:G{rows}'
 
 	ws.freeze_panes = 'A2'
 	

@@ -45,6 +45,7 @@ def get_data(price_list, percentage, item_groups):
 						.from_(item_doc)
 						.from_(item_price_doc)
 						.select(
+							item_price_doc.name.as_("name"),
 							item_price_doc.item_code.as_("item_code"),
 							item_doc.item_name.as_("item_name"),
 							item_doc.item_group.as_("item_group"),
@@ -66,6 +67,11 @@ def get_data(price_list, percentage, item_groups):
 
 def get_columns():
 	return [{
+	'fieldname': 'name',
+	'label': 'ID',
+	'fieldtype': 'Data',
+	'width': 115
+	},{
 	'fieldname': 'item_code',
 	'label': 'كود الصنف',
 	'fieldtype': 'Data',
