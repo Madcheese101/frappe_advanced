@@ -73,12 +73,12 @@ def get_columns():
 	'width': 115
 	},{
 	'fieldname': 'item_code',
-	'label': 'كود الصنف',
+	'label': 'Item Code',
 	'fieldtype': 'Data',
 	'width': 115
 	}, {
 	'fieldname': 'item_name',
-	'label': 'اسم الصنف',
+	'label': 'Item Name',
 	'fieldtype': 'Data',
 	'width': 350
 	}, {
@@ -94,7 +94,7 @@ def get_columns():
 	'width': 100
 	}, {
 	'fieldname': 'new_rate',
-	'label': 'السعر الجديد',
+	'label': 'Rate',
 	'fieldtype': 'Float',
 	'precision': 2,
 	'width': 100
