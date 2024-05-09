@@ -38,7 +38,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-08 15:51:01.057406",
+ "modified": "2024-05-09 19:29:31.509228",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Expense Type",
@@ -64,6 +64,20 @@
    "read": 1,
    "role": "Accounts User",
    "select": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
   }
  ],
  "sort_field": "modified",
