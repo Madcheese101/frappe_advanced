@@ -109,16 +109,30 @@ def get_current_balance_msg():
 @frappe.whitelist()
 def custody_account_balance():
 	branch = []
-	if(frappe.session.user != "Administrator"):
-			branch = frappe.db.get_value('Employee', 
-					   {'user_id': frappe.session.user}, ['branch'])
-	if branch:
-		branch_expenses = frappe.db.get_value('Branch', 
-						branch, ['expenses_account'])
-		balance = get_balance_on(branch_expenses, today(), ignore_account_permission=True) or 0
-		frappe.msgprint(str(balance) + " دينار")	
+	msg = ''
+	user_roles = frappe.get_roles(frappe.session.user)
+	if("Accounts Manager" in user_roles):
+		expense_accounts = frappe.get_all("Branch", 
+									filters={"expenses_account": ["!=", None]},
+									pluck="expenses_account")
+		for account in expense_accounts:
+			if msg == '': msg += '<ul>'
+			account_balance = get_balance_on(account, today(), ignore_account_permission=True) or 0
+			msg += f'<li>{account}: {frappe.format_value(account_balance, {"fieldtype":"Currency"})} </li>'
+		if msg != '':
+			msg += '</ul>'
+		frappe.msgprint(msg)
 	else:
-		frappe.msgprint("حقل فرع الشركة للمستخدم غير محدد")
+		branch = frappe.db.get_value('Employee', 
+					{'user_id': frappe.session.user}, ['branch'])
+		
+		if branch:
+			branch_expenses = frappe.db.get_value('Branch', 
+							branch, ['expenses_account'])
+			balance = get_balance_on(branch_expenses, today(), ignore_account_permission=True) or 0
+			frappe.msgprint(str(balance) + " دينار")	
+		else:
+			frappe.msgprint("حقل فرع الشركة للمستخدم غير محدد")
 				
 @frappe.whitelist()
 def enqueue_multiple_variant_creation(item, args):
