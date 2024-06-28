@@ -233,3 +233,54 @@ def submit_doc(document):
 	doc.submit()
 	if doc.doctype == "Stock Entry":
 		doc.db_set('add_to_transit', 0)
+
+@frappe.whitelist()
+def get_expenses_accounts():
+	expense_accounts = frappe.get_all("Branch",
+								   fields=[
+									   "name as branch",
+									   "expenses_account", 
+									   "(0) as amount", 
+									   "'' as receipt_no"],
+									filters={"expenses_account": ["!=", None]}) or []
+	return expense_accounts
+@frappe.whitelist()
+def insert_branch_expense_credit(data, company):
+	data = json.loads(data)
+	missing_receipts = []
+	cost_center, default_cash_account = frappe.db.get_value("Company", company, ["cost_center", "default_cash_account"])
+	if not cost_center:
+		frappe.throw(_("Please set Cost Center in Company {0}").format(company))
+	if not default_cash_account:
+		frappe.throw(_("Please set Default Cash Account in Company {0}").format(company))
+
+	for d in data:
+		if d["amount"] <= 0:
+			continue
+		if not d["receipt_no"]:
+			missing_receipts.append(d["branch"])
+			continue
+		
+		doc = frappe.new_doc('Journal Entry')
+		doc.voucher_type = "Journal Entry"
+		doc.user_remark = "صرف رصيد عهدة للمحل"
+		doc.posting_date = today()
+		doc.cheque_no = f'إذن صرف {d["receipt_no"]}'
+		doc.cheque_date = today()
+		# money to account
+		to_ = {"account":d["expenses_account"],
+	 			"cost_center": cost_center,
+				"debit_in_account_currency": d["amount"]}
+		# money from account
+		from_ = {"account":default_cash_account,
+	 			"cost_center": cost_center,
+				"credit_in_account_currency": d["amount"]}
+		
+		doc.append("accounts",to_)
+		doc.append("accounts",from_)
+
+		doc.save(ignore_permissions=True)
+		doc.submit()
+
+	if missing_receipts:
+		frappe.msgprint(_("الرجاء ادخال رقم إذن الصرف لعهدة كل من: {0}").format(", ".join(missing_receipts)))

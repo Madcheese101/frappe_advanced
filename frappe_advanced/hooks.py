@@ -43,7 +43,8 @@ doctype_js = {"Stock Entry" : "public/js/stock_entry.js",
               "Quotation" : "public/js/quotation.js",
               "Item" : "public/js/item.js",
               "Payment Entry" : "public/js/payment_entry.js"}
-doctype_list_js = {"Payment Entry" : "public/js/payment_entry_list.js"}
+doctype_list_js = {"Payment Entry" : "public/js/payment_entry_list.js",
+                   "Journal Entry" : "public/js/journal_entry_list.js"}
 # Home Pages
 # ----------
 
