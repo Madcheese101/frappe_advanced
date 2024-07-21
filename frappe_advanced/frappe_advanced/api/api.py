@@ -240,7 +240,8 @@ def get_expenses_accounts():
 								   fields=[
 									   "name as branch",
 									   "expenses_account", 
-									   "(0) as amount", 
+									   "(0) as amount",
+									   "'' as receipt_date", 
 									   "'' as receipt_no"],
 									filters={"expenses_account": ["!=", None]}) or []
 	return expense_accounts
@@ -248,6 +249,7 @@ def get_expenses_accounts():
 def insert_branch_expense_credit(data, company):
 	data = json.loads(data)
 	missing_receipts = []
+	missing_dates = []
 	cost_center, default_cash_account = frappe.db.get_value("Company", company, ["cost_center", "default_cash_account"])
 	if not cost_center:
 		frappe.throw(_("Please set Cost Center in Company {0}").format(company))
@@ -260,13 +262,16 @@ def insert_branch_expense_credit(data, company):
 		if not d["receipt_no"]:
 			missing_receipts.append(d["branch"])
 			continue
+		if not d["receipt_date"]:
+			missing_dates.append(d["branch"])
+			continue
 		
 		doc = frappe.new_doc('Journal Entry')
 		doc.voucher_type = "Journal Entry"
 		doc.user_remark = "صرف رصيد عهدة للمحل"
-		doc.posting_date = today()
+		doc.posting_date = d["receipt_date"]
 		doc.cheque_no = f'إذن صرف {d["receipt_no"]}'
-		doc.cheque_date = today()
+		doc.cheque_date = d["receipt_date"]
 		# money to account
 		to_ = {"account":d["expenses_account"],
 	 			"cost_center": cost_center,
@@ -284,3 +289,5 @@ def insert_branch_expense_credit(data, company):
 
 	if missing_receipts:
 		frappe.msgprint(_("الرجاء ادخال رقم إذن الصرف لعهدة كل من: {0}").format(", ".join(missing_receipts)))
+	if missing_dates:
+		frappe.msgprint(_("الرجاء ادخال تاريخ إذن الصرف لعهدة كل من: {0}").format(", ".join(missing_dates)))
