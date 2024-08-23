@@ -40,7 +40,7 @@ app_include_js = ["frappe_advanced.bundle.js"]
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 doctype_js = {"Stock Entry" : "public/js/stock_entry.js",
-              "Quotation" : "public/js/quotation.js",
+              "Sales Order" : "public/js/sales_order.js",
               "Item" : "public/js/item.js",
               "Payment Entry" : "public/js/payment_entry.js"}
 doctype_list_js = {"Payment Entry" : "public/js/payment_entry_list.js",

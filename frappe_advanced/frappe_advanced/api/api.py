@@ -291,3 +291,27 @@ def insert_branch_expense_credit(data, company):
 		frappe.msgprint(_("الرجاء ادخال رقم إذن الصرف لعهدة كل من: {0}").format(", ".join(missing_receipts)))
 	if missing_dates:
 		frappe.msgprint(_("الرجاء ادخال تاريخ إذن الصرف لعهدة كل من: {0}").format(", ".join(missing_dates)))
+@frappe.whitelist()
+def get_item_warehouses(so_id):
+	# The doctype that has the stock levels is Bin
+	doc = frappe.get_doc("Sales Order", so_id)
+	msg = ""
+	for item in doc.get("items"):
+		wh_list = frappe.db.get_list('Bin',
+			fields=["warehouse","actual_qty"],
+			filters={"item_code": item.item_code, "actual_qty": ['>', 0]},
+			order_by="actual_qty desc"
+			# as_list=True,
+			# pluck='warehouse'
+			# as_dict=True
+			)
+		if wh_list:
+			msg=msg + item.item_name +"<hr>" + "<ul>"
+			for wh in wh_list:
+				msg=msg+"<li>"+wh["warehouse"].replace("BC","")+"  ("+str(wh["actual_qty"])+") </li>"
+			msg = msg + "</ul><hr>"
+			
+	if msg:
+		frappe.msgprint(msg)
+	else:
+		frappe.msgprint(_("No Stock found"))
