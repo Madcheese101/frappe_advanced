@@ -41,7 +41,8 @@ frappe.ui.form.on('Stock Entry', {
                         label: __('Choose Recieving Branch'),
                         fieldname: 'branch',
                         fieldtype: 'Link',
-                        options: 'Branch'
+                        options: 'Branch',
+                        ignore_user_permissions: 1
                     }, (values) => {
                         frm.call({
             					method: 'frappe_advanced.frappe_advanced.api.api.set_title',
