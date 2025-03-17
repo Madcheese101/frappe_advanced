@@ -4,7 +4,9 @@
 frappe.ui.form.on('Salary', {
 	refresh: function(frm) {
 		// remove delete row btn
-		$('*[data-fieldname="employees"]').find('.grid-remove-rows').hide();
+		if(!frappe.user.has_role('System Manager')){
+			$('*[data-fieldname="employees"]').find('.grid-remove-rows').hide();
+		}
 
 		const btn_grp_label = __('إجراءات سريعة');
 		
@@ -127,12 +129,15 @@ frappe.ui.form.on('Employee Manager List', {
     // }
 
 	form_render(frm, cdt, cdn){
-        frm.fields_dict.employees.grid.wrapper.find('.grid-delete-row').hide();
+		if(!frappe.user.has_role('System Manager')){
+			frm.fields_dict.employees.grid.wrapper.find('.grid-delete-row').hide();
         // frm.fields_dict.employees.grid.wrapper.find('.grid-duplicate-row').hide();
         // frm.fields_dict.employees.grid.wrapper.find('.grid-move-row').hide();
         // frm.fields_dict.employees.grid.wrapper.find('.grid-append-row').hide();
         // frm.fields_dict.employees.grid.wrapper.find('.grid-insert-row-below').hide();
         // frm.fields_dict.employees.grid.wrapper.find('.grid-insert-row').hide();
+		}
+
     },
 	salary(frm, cdt, cdn) {
 		var d = locals[cdt][cdn];
