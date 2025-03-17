@@ -128,10 +128,10 @@ doc_events = {
         "on_submit": "frappe_advanced.crud_events.events.split_batch_on_recieve",
         "before_save": "frappe_advanced.crud_events.events.stock_entry_set_default_from_target"
 	},
-    "POS Profile": {
-		"after_insert": "frappe_advanced.crud_events.events.update_user_permissions_event",
-        "on_update": "frappe_advanced.crud_events.events.update_user_permissions_event"
-	},
+    # "POS Profile": {
+	# 	"after_insert": "frappe_advanced.crud_events.events.update_user_permissions_event",
+    #     "on_update": "frappe_advanced.crud_events.events.update_user_permissions_event"
+	# },
     "Item": {
         "after_insert": "frappe_advanced.crud_events.events.generate_item_barcode"
     }
