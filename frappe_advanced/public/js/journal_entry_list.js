@@ -1,5 +1,4 @@
 frappe.listview_settings['Journal Entry'] = {
-
 	refresh: function(listview) {
         if (frappe.user_roles.includes("Accounts Manager")){
             listview.page.add_inner_button(__('صرف عهدة'), function() {                
@@ -44,6 +43,7 @@ expenses_credit_dialog = function(accounts){
                 data: accounts
             },
         ],
+        size: "large",
         primary_action: (values) => {
             const journals = values.journals;
             frappe.confirm('هل أنت متأكد من صرف العهدة للفروع؟',

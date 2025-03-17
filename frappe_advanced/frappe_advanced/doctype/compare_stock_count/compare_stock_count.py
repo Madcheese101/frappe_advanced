@@ -13,6 +13,7 @@ from frappe.utils import today
 class CompareStockCount(Document):
 	pass
 
+# TODO: remove warehouse from employee
 @frappe.whitelist()
 def start_export():
 	employee_exist = frappe.db.exists("Employee", {"user_id": frappe.session.user})

@@ -17,10 +17,10 @@ def get_current_user_defaults():
     
     if(frappe.session.user != "Administrator"):
         branch, default_warehouse, default_in_transit_warehouse = frappe.db.get_value('Employee', {'user_id': frappe.session.user}, 
-                                                                                      ['branch', 'default_warehouse', 
-                                                                                       'default_in_transit_warehouse'])
+			['branch', 'default_warehouse', 
+			'default_in_transit_warehouse'])
         letter_head = frappe.db.get_value('Branch', branch, ['letter_head'])
-  
+	
     return {"branch": branch or "",
             "default_warehouse": default_warehouse or "", 
             "default_in_transit_warehouse": default_in_transit_warehouse or "", 
@@ -72,39 +72,61 @@ def auto_close_shift():
 
 @frappe.whitelist()
 def get_current_balance_msg():
-    # frappe.throw(today())
-    msg = ''
-    parent_accounts = None
-    branch = frappe.db.get_value('Employee', {'user_id': frappe.session.user}, ['branch'])
-    if branch:
-        parent_accounts = frappe.db.get_list('Branch', 
-                            filters={
-                                'name': branch,
-                                },
-                            fields=['parent_account as name', 'parent_account as account_name'])
-    else:
-        parent_accounts = frappe.db.get_list("Account",
-                        filters={
-                            'is_group': 1,
-                            'account_number': ['in', [1112,1115,
-                                                        1116,1117,
-                                                        1119,1121]]
-                            },
-                        fields=['account_name', 'name'])
-    
-    for parent in parent_accounts:
-        msg += parent.account_name + ': <br>' + '<ul>'
-        child_accounts = frappe.db.get_list("Account",
-                       filters={
-                           'is_group': 0,
-                           'parent_account': parent.name
-                           },
-                       fields=['account_name', 'name'])
-        for child in child_accounts:
-            balance = get_balance_on(child.name, today(), ignore_account_permission=True) or 0
-            msg += f'<li>{child.account_name}: {frappe.format_value(balance, {"fieldtype":"Currency"})} </li>'
-        msg += '</ul>'
-    frappe.msgprint(msg)
+	branches = frappe.db.get_list("Branch", pluck='name')
+	msg = ''
+
+	for branch in branches:
+		m_payments = frappe.db.get_list("Mode of Payment", pluck='name', filters={'branch':branch})
+		
+		if len(m_payments) == 0:
+			continue
+
+		accounts_list = frappe.db.get_all("Mode of Payment Account", filters={'parent': ['in', m_payments]}, fields=['default_account', 'parent'])
+		msg += branch + ': <br>' + '<ul>'
+		for account in accounts_list:
+			balance = get_balance_on(account.default_account, today(), ignore_account_permission=True) or 0
+			msg += f'<li>{account.parent}: {frappe.format_value(balance, {"fieldtype":"Currency"})} </li>'
+		msg += '</ul>'
+
+	if len(branches) > 1:
+		middle_man_accounts = frappe.db.get_all("Mode of Payment Account", fields=['default_account', 'parent'], filters={'parent':['like', '%علي%']})
+		msg += 'حساب عمي علي: <br>' + '<ul>'
+		for account in middle_man_accounts:
+			balance = get_balance_on(account.default_account, today(), ignore_account_permission=True) or 0
+			msg += f'<li>{account.parent}: {frappe.format_value(balance, {"fieldtype":"Currency"})} </li>'
+		msg += '</ul>'
+
+	# parent_accounts = None
+	# branch = frappe.db.get_value('Employee', {'user_id': frappe.session.user}, ['branch'])
+	# if branch:
+	# 	parent_accounts = frappe.db.get_list('Branch', 
+	# 						filters={
+	# 							'name': branch,
+	# 							},
+	# 						fields=['parent_account as name', 'parent_account as account_name'])
+	# else:
+	# 	parent_accounts = frappe.db.get_list("Account",
+	# 					filters={
+	# 						'is_group': 1,
+	# 						'account_number': ['in', [1112,1115,
+	# 													1116,1117,
+	# 													1119,1121]]
+	# 						},
+	# 					fields=['account_name', 'name'])
+
+	# for parent in parent_accounts:
+	# 	msg += parent.account_name + ': <br>' + '<ul>'
+	# 	child_accounts = frappe.db.get_list("Account",
+	# 					filters={
+	# 						'is_group': 0,
+	# 						'parent_account': parent.name
+	# 						},
+	# 					fields=['account_name', 'name'])
+	# 	for child in child_accounts:
+	# 		balance = get_balance_on(child.name, today(), ignore_account_permission=True) or 0
+	# 		msg += f'<li>{child.account_name}: {frappe.format_value(balance, {"fieldtype":"Currency"})} </li>'
+	# 	msg += '</ul>'
+	frappe.msgprint(msg)
 	
 @frappe.whitelist()
 def custody_account_balance():

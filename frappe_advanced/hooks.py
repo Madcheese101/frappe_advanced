@@ -261,6 +261,8 @@ fixtures = [
                     "Branch-cost_center",
                     "Stock Entry-title",
                     "auto_items_barcode",
+                    "POS Profile-custom_branch",
+                    "Mode of Payment-custom_branch"
                 ),
             ]
         ]
