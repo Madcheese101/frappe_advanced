@@ -71,7 +71,10 @@ frappe.ui.form.on('Payment Entry', {
 	    
 	   // frm.toggle_reqd('note_count',  frm.doc.payment_type ==='Internal Transfer' && frappe.user_roles.includes("Payment Entry (C)"));
 	    var parentAC_filter = "علي";
+        // get type of payment: بطاقة - نقدي - صك
 	    var payment = (frm.doc.mode_of_payment.split(" ")[0]).slice(0,-1);
+
+        
 	    if(frm.doc.payment_type ==='Internal Transfer'){
 	        if(frappe.user_roles.includes("Accounts Manager")){
                 payment = "الرئيسية";
