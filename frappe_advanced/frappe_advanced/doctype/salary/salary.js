@@ -32,7 +32,7 @@ frappe.ui.form.on('Salary', {
 		frappe.confirm('هل تريد ايقاف الموظف ' + emp_name + '؟',
 			() => {
 				// action to perform if Yes is selected
-				frm.call('transfer_employee', {
+				frm.call('employee_leave', {
 					selected_emp: selected_emp,
 				}).then(() => {
 					frm.refresh();
