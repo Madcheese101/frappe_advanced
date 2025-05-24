@@ -253,6 +253,8 @@ fixtures = [
                     "Property Setter-dont_replace",
                     "Payment Entry-note_count",
                     "Payment Entry-count_total",
+                    "Payment Entry-custom_branch",
+                    "Payment Entry-custom_mode_of_payment_type",
                     "Branch-warehouse",
                     "Branch-parent_account",
                     "Branch-letter_head",
