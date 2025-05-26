@@ -36,7 +36,7 @@ frappe.query_reports["Salesperson Sales"] = {
             fieldname:"show_cash_only",
             label: __("Cash Only?"),
             fieldtype: "Check",
-            default: 1,
+            default: 0,
             change: function() {
                 frappe.query_report.refresh();
             }

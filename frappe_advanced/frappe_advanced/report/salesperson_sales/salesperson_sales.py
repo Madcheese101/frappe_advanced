@@ -90,11 +90,12 @@ def get_branch_total(branch, show_cash_only, from_date, to_date):
 
 def get_branch_employee_sales(branch, show_cash_only, from_date, to_date, branch_total):
 	by_sales_inv = get_salesperson_sales(branch, show_cash_only, from_date, to_date) or []
-
 	for employee in by_sales_inv:
 		payment_entry_total = get_salesperson_payment_entries(show_cash_only, from_date, to_date, employee.branch)
 		employee.total = employee.total + payment_entry_total
-		employee.percentage = (employee.total / branch_total) * 100
+		
+		employee.percentage = (0 if employee.total == 0 
+			else (employee.total / branch_total) * 100)
 		employee.indent = 1
 		employee.has_value = 0
 	
@@ -133,8 +134,6 @@ def get_salesperson_sales(branch, show_cash_only, from_date, to_date):
 		query_ = (query_
 			.from_(payments)
 			.select(
-				payment_sum,
-				additional_discount_total,
 				total
 			)
 			.where(sales_invoice.name == payments.parent)
@@ -203,7 +202,7 @@ def get_columns(filters):
 		},
 		{
 			"fieldname": "percentage",
-			"label": _("الإجمالي"),
+			"label": _("النسبة"),
 			"fieldtype": "Percent",
 			"width": 200,
 			"precision": 2
