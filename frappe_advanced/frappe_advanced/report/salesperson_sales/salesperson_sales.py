@@ -19,17 +19,29 @@ def execute(filters=None):
 
 	for branch in branchs:
 		branch_total = get_branch_total(branch, show_cash_only, from_date, to_date)
-
-		# if branch_total == 0:
-		# 	continue
-
+		emloyee_manager_doc = frappe.get_doc("Salary", {"branch": branch})
+		
 		data.append({
 			"branch": branch,
 			"total": branch_total,
-			"percentage": 100,
+			"percentage": "",
 			"indent": 0,
 			"has_value": 1})
-		data.extend(get_branch_employee_sales(branch, show_cash_only, from_date, to_date, branch_total))
+		employees_sales = get_branch_employee_sales(branch, show_cash_only, from_date, to_date, branch_total)
+		employees_sales_dict = {item.sales_person: item for item in employees_sales}
+		for employee in emloyee_manager_doc.employees:
+			if employee.designation == "عامل":
+				continue
+			if employee.emp_id not in employees_sales_dict.keys():
+				employees_sales.append({
+					"branch": employee.emp_name,
+					"sales_person": employee.emp_id,
+					"total": 0,
+					"percentage": 0,
+					"indent": 1,
+					"has_value": 0
+				})
+		data.extend(employees_sales)
 	
 	return columns, data
 
