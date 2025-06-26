@@ -15,13 +15,168 @@ from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
 	get_dimension_with_children,
 )
 from collections import OrderedDict
+from frappe.query_builder import DocType
+from pypika.terms import Case, ValueWrapper
+from pypika import Order
 
 # to cache translations
 TRANSLATIONS = frappe._dict()
 
-def execute(filters=None):
-	columns, data = get_columns(filters), get_data(filters)
+def execute(filters=None):	
+	columns, data = get_columns(filters), []
+	
+	branches = frappe.get_list("Branch", pluck="name")
+	from_date, to_date = getdate(filters.from_date), getdate(filters.to_date)
+	
+	if filters.branch:
+		branches = [filters.branch]
+	
+	company_total = 0
+	for branch in branches:
+		branch_head = get_branch_totals(branch, from_date, to_date)
+		data.append(branch_head)
+		is_detailed = filters.view_method == "detailed"
+		data.extend(get_branch_data(branch, from_date, to_date, is_detailed))
+
+		company_total += branch_head["outcome"]
+	
+	# columns, data = get_columns(filters), get_data(filters)
+
+	data.extend([
+		{},
+		{},
+		{
+			"mode_of_payment": _("الإجمالي التام"),
+			"outcome": company_total
+		}
+	])
 	return columns, data
+
+
+def get_branch_totals(branch, from_date, to_date):
+	pos_profile = frappe.db.get_list("POS Profile", filters={"branch": branch}, pluck="name")
+
+	invoice_total = frappe.get_list("Sales Invoice", 
+							fields=["sum(paid_amount) as total"],
+							filters={
+								"pos_profile": pos_profile[0],
+								"posting_date": ["between", [from_date, to_date]],
+								"docstatus": 1,
+								"customer": ["not in", ["محل بن عاشور", "محل قرقارش"]]},
+								pluck="total")
+	payment_entry_total = frappe.get_list("Payment Entry", 
+							fields=["sum(paid_amount) as total"],
+							filters={
+								"branch": branch,
+								"posting_date": ["between", [from_date, to_date]],
+								"docstatus": 1,
+								"party_type": "Customer",
+								"payment_type": "Receive"},
+								pluck="total")
+	payment_entry_pay_total = frappe.get_list("Payment Entry", 
+							fields=["(sum(paid_amount)*-1) as total"],
+							filters={
+								"branch": branch,
+								"posting_date": ["between", [from_date, to_date]],
+								"docstatus": 1,
+								"party_type": "Customer",
+								"payment_type": "Pay"},
+								pluck="total")
+	
+	branch_total = (invoice_total[0] or 0) + (payment_entry_total[0] or 0) + (payment_entry_pay_total[0] or 0)
+	row = {
+			"mode_of_payment": branch,
+			"outcome": branch_total,
+			"has_value": 1,
+			"indent": 0
+		}
+	return row
+
+def get_mode_of_payment_totals(mode_of_payment, from_date, to_date):
+	invoice_total = frappe.get_all("Sales Invoice Payment", 
+							fields=["sum(amount) as total"],
+							filters={
+								"mode_of_payment": mode_of_payment,
+								"creation": ["between", [from_date, to_date]],
+								"docstatus": 1,
+								# "customer": ["not in", ["محل بن عاشور", "محل قرقارش"]]
+							},
+							pluck="total")
+	payment_entry_total = frappe.get_all("Payment Entry", 
+							fields=["sum(paid_amount) as total"],
+							filters={
+								"mode_of_payment": mode_of_payment,
+								"posting_date": ["between", [from_date, to_date]],
+								"docstatus": 1,
+								"party_type": "Customer",
+								"payment_type": "Receive"},
+								pluck="total")
+	payment_entry_pay_total = frappe.get_all("Payment Entry", 
+							fields=["(sum(paid_amount)*-1) as total"],
+							filters={
+								"mode_of_payment": mode_of_payment,
+								"posting_date": ["between", [from_date, to_date]],
+								"docstatus": 1,
+								"party_type": "Customer",
+								"payment_type": "Pay"},
+								pluck="total")
+	mode_of_payment_total = (invoice_total[0] or 0) + (payment_entry_total[0] or 0) + (payment_entry_pay_total[0] or 0)
+
+	row = {
+		"mode_of_payment": mode_of_payment,
+		"outcome": mode_of_payment_total,
+		"has_value": 1,
+		"indent": 1}
+	return row
+
+def get_branch_data(branch, from_date, to_date, is_detailed=False):
+	data = []
+	mode_of_payments = frappe.get_all("Branch Mode of Payment", {"parent": branch}, pluck="mode_of_payment")
+
+	for mode_of_payment in mode_of_payments:
+		data.append(get_mode_of_payment_totals(mode_of_payment, from_date, to_date))
+
+		if is_detailed:
+			data.extend(get_account_transactions(mode_of_payment, from_date, to_date))
+
+	return data
+
+def get_account_transactions(mode_of_payment, from_date, to_date):
+	account = frappe.get_all("Mode of Payment Account", filters={"parent": mode_of_payment}, pluck="default_account")
+	
+	gl_doctype = DocType("GL Entry")
+	employee = DocType("Employee")
+	outcome = (Case()
+				.when(gl_doctype.debit > 0, gl_doctype.debit)
+				.when(gl_doctype.credit > 0, gl_doctype.credit * -1)
+				.else_(0)
+			).as_("outcome")
+	has_value = ValueWrapper(0, "has_value")
+	indent = ValueWrapper(2, "indent")
+
+	query = (frappe.qb
+				.from_(gl_doctype)
+				.from_(employee)
+				.select(
+					employee.employee_name.as_("mode_of_payment"),
+					outcome,
+					gl_doctype.voucher_type.as_("voucher_type"),
+					gl_doctype.voucher_no.as_("voucher_no"),
+					gl_doctype.posting_date.as_("posting_date"),
+					has_value,
+					indent
+				)
+				.where(employee.user_id == gl_doctype.owner)
+				.where(gl_doctype.posting_date.between(from_date, to_date))
+				.where(gl_doctype.account == account[0])
+				.where(gl_doctype.voucher_no.not_like("%ACC-INT%"))
+				.orderby(gl_doctype.posting_date, order=Order.desc)
+		).run(as_dict=True)
+
+	return query
+
+
+
 
 def get_data(report_filters):
 	filters = {}
@@ -50,7 +205,6 @@ def get_data(report_filters):
 		"mode_of_payment": "الإجمالي التام",
 		"outcome": grand_total})
 	return data
-
 
 def get_result(filters, branch):
 	custom_filters = filters
@@ -139,7 +293,7 @@ def get_gl_entries(filters, accounting_dimensions):
 		filters,
 		as_dict=1,
 	)
-
+	# frappe.throw(str(gl_entries))
 	if filters.get("presentation_currency"):
 		return convert_to_presentation_currency(gl_entries, currency_map)
 	else:
@@ -389,22 +543,15 @@ def get_columns(filters):
 	]
 	
 	if filters.view_method == "employee_short":
-		columns.extend(	[
+		columns.append(	
 			{
 				"fieldname": "employee",
 				"label": _("الموظف"),
 				"fieldtype": "data",
 				"width": 150
-			},
-			{
-				"fieldname": "outcome",
-				"label": _("إجمالي القيمة"),
-				"fieldtype": "Currency",
-				"width": 200,
-				"precision": 2
-			}
-		])
-	elif filters.view_method == "detailed":
+			})
+	
+	if filters.view_method == "detailed":
 		columns.extend([
 			{
 				"label": _("Journal Entry"),
@@ -417,7 +564,7 @@ def get_columns(filters):
 				"fieldname": "outcome",
 				"label": _("إجمالي القيمة"),
 				"fieldtype": "Currency",
-				"width": 150,
+				"width": 200,
 				"precision": 2
 			},
 			{
@@ -427,13 +574,15 @@ def get_columns(filters):
 				"width": 120
 			}
 		])
-	else:
-		columns.append({
+
+	if filters.view_method != "detailed":
+		columns.append(
+			{
 				"fieldname": "outcome",
 				"label": _("إجمالي القيمة"),
 				"fieldtype": "Currency",
 				"width": 200,
 				"precision": 2
-			})
-
+			}
+		)
 	return columns

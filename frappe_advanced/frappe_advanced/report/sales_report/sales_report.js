@@ -41,10 +41,10 @@ frappe.query_reports["Sales Report"] = {
 					label: __("مختصر"),
 					value: "short",
 				},
-				{
-					label: __("مختصر حسب الموظفين"),
-					value: "employee_short",
-				},
+				// {
+				// 	label: __("مختصر حسب الموظفين"),
+				// 	value: "employee_short",
+				// },
 				{
 					label: __("مفصل"),
 					value: "detailed",
