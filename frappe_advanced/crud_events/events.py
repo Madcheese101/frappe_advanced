@@ -5,6 +5,7 @@ from erpnext.stock.doctype.batch.batch import split_batch
 from frappe.permissions import (
 	add_user_permission
 )
+from frappe.utils import today, flt
 # set default target and source warehouses fields
 # on stock entry before saving
 def stock_entry_set_default_from_target(doc, method=None):
@@ -120,3 +121,56 @@ def generate_item_barcode(doc, method):
 
 	doc.save()
 	frappe.db.commit()
+
+def create_moamlat_journal_entry(doc, method=None):
+    if not doc.doctype == "Payment Entry":
+        return
+    process_credit_card_bank_fees = frappe.db.get_single_value('Advanced Settings', 'process_credit_card_bank_fees')
+    
+    if not process_credit_card_bank_fees:
+        return
+    
+    middle_account = frappe.get_doc("Account", doc.paid_to)
+    if not middle_account.is_middle_account or not middle_account.destination_account:
+        return
+    
+    bank_fees_account = frappe.db.exists("Account", {"is_bank_fees_account": 1, "disabled": 0})
+    if not bank_fees_account:
+        return
+    
+    je = frappe.new_doc('Journal Entry')
+		
+    je.voucher_type = "Journal Entry"
+    je.posting_date = today()
+
+    fee_percent = middle_account.banking_fee or 0.5
+
+    total_fee = flt(fee_percent * doc.paid_amount / 100, 3)
+    to_total = flt(doc.paid_amount - total_fee, 3)
+    
+    # money to account
+    to_ = {"account": middle_account.destination_account,
+        # "cost_center": self.cost_center,
+        "exchange_rate": 1,
+        "debit_in_account_currency": flt(to_total,3)}
+    
+    fees_ = {
+        "account": bank_fees_account,
+        # "cost_center": doc.cost_center,
+        "exchange_rate": 1,
+        "debit_in_account_currency": flt(total_fee,3)
+    }
+    # money from account
+    from_ = {"account":middle_account.name,
+        # "cost_center": self.cost_center,
+        "exchange_rate": 1,
+        "credit_in_account_currency": doc.paid_amount}
+    
+    je.append("accounts",to_)
+    je.append("accounts",fees_)
+    je.append("accounts",from_)
+    je.set_amounts_in_company_currency()
+    je.set_total_debit_credit()
+    # save and submit journal entry
+    je.save(ignore_permissions=True)
+    je.submit()

@@ -120,7 +120,10 @@ doc_events = {
 		"on_submit": "frappe_advanced.crud_events.warning_events.exceeded_discount_percentage"
 	},
     "Payment Entry": {
-		"on_submit": "frappe_advanced.crud_events.warning_events.partial_balance_transfer",
+		"on_submit": [
+                "frappe_advanced.crud_events.warning_events.partial_balance_transfer",
+                "frappe_advanced.crud_events.events.create_moamlat_journal_entry"
+            ],
         "before_submit": "frappe_advanced.crud_events.warning_events.validate_write_off_limit",
         "validate": "frappe_advanced.crud_events.events.check_open_posa_shifts"
 	},

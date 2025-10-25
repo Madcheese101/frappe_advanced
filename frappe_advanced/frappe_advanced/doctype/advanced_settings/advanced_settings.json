@@ -24,7 +24,9 @@
   "company_cash_notes",
   "batch_settings_section",
   "auto_split_batch",
-  "for_item_groups"
+  "for_item_groups",
+  "accounting_settings_section",
+  "process_credit_card_bank_fees"
  ],
  "fields": [
   {
@@ -141,12 +143,23 @@
    "fieldname": "days_to_warn",
    "fieldtype": "Int",
    "label": "Other Warnings Task Interval (Days to Warn)"
+  },
+  {
+   "default": "0",
+   "fieldname": "process_credit_card_bank_fees",
+   "fieldtype": "Check",
+   "label": "Process Credit Card Bank Fees"
+  },
+  {
+   "fieldname": "accounting_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Accounting Settings"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-02-22 18:36:34.929161",
+ "modified": "2025-10-25 17:12:26.296031",
  "modified_by": "Administrator",
  "module": "Frappe Advanced",
  "name": "Advanced Settings",
