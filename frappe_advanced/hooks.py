@@ -267,7 +267,11 @@ fixtures = [
                     "Stock Entry-title",
                     "auto_items_barcode",
                     "POS Profile-custom_branch",
-                    "Mode of Payment-custom_branch"
+                    "Mode of Payment-custom_branch",
+                    "Account-custom_الحساب_النهائي",
+                    "Account-custom_عمولة_البنك",
+                    "Account-custom_is_middle_account",
+                    "Account-custom_is_bank_fees_account",
                 ),
             ]
         ]
