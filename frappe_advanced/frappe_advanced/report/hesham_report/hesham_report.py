@@ -11,7 +11,7 @@ def execute(filters=None):
 	return columns, data
 
 def get_data(filters):
-	customers = ["محل بن عاشور", "محل قرقارش"]
+	customers = ["محل بن عاشور", "محل قرقارش", "بن عاشور موكيت"]
 	data = []
 	for customer in customers:
 		customer_total = get_customer_total(customer, filters) or 0
@@ -26,7 +26,7 @@ def get_customer_total(customer, filters):
 	data = frappe.get_list("Sales Invoice", filters={
 			"customer": customer, 
 			"docstatus": 1,
-			"outstanding_amount": ["!=", 0],
+			# "outstanding_amount": ["!=", 0],
 			"posting_date": ["between", [filters["from_date"], filters["to_date"]]]
 		}, 
 		fields=["SUM(grand_total) as c_total"],
@@ -61,7 +61,7 @@ def get_type_total(customer, filters, type = None):
 			"is_return": type["is_return"], 
 			"docstatus": 1,
 			"posting_date": ["between", [filters["from_date"], filters["to_date"]]],
-			"outstanding_amount": ["!=", 0]
+			# "outstanding_amount": ["!=", 0]
 		},
 		fields=["SUM(grand_total) as t_total"],
 		group_by="customer",pluck="t_total")
@@ -71,7 +71,9 @@ def get_type_total(customer, filters, type = None):
 def get_profile_data(customer, filters, profiles, type = None):
 	data = []
 	_filters = {**filters, "posting_date":["between", [filters["from_date"], filters["to_date"]]],
-			 "docstatus": 1, "customer": customer, "outstanding_amount": ["!=", 0]}
+			"docstatus": 1, "customer": customer, 
+			# "outstanding_amount": ["!=", 0]
+		}
 	if type:
 		_filters["is_return"] = type["is_return"]
 	
