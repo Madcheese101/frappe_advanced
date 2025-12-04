@@ -16,9 +16,30 @@ frappe.query_reports["نسبة مبيع التصنيفات"] = {
             fieldtype: "Date",
             default: frappe.datetime.get_today()
         },
+        {
+            fieldname:"view_method",
+            label: __("نوع التقرير"),
+            fieldtype: "Select",
+            options: [
+				// "",
+				{
+					label: __("مختصر"),
+					value: "short",
+				},
+				{
+					label: __("حسب المقاس"),
+					value: "size_only",
+				},
+				{
+					label: __("حسب المقاس و اللون"),
+					value: "size_color",
+				},
+			],
+            default: "short"
+        }
 	],
     "tree":true,
-	"name_field":"item_group",
+	"name_field":"parent_item_group",
 	"parent_field":"parent_item_group",
-	"initial_depth":1
+	"initial_depth":3
 };
