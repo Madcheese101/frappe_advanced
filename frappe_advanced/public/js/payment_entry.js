@@ -101,6 +101,18 @@ frappe.ui.form.on('Payment Entry', {
         frm.refresh_fields();
 	    }
     },
+
+    mode_of_payment_type: function(frm) {
+        frm.set_query("note_count", function() {
+			return {
+				filters: [
+                    ["Note Count", "docstatus", "=", 1],
+                    ["Note Count", "is_advance", "=", 0],
+                    ["Note Count", "payment_type", "=", frm.doc.mode_of_payment_type],
+				]
+			}
+		});
+    },
     setup: function(frm) {
 	    frm.set_query("note_count", function() {
 			return {
