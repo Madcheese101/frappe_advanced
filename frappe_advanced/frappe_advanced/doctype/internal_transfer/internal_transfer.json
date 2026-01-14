@@ -1,0 +1,122 @@
+{
+ "actions": [],
+ "autoname": "format:\u062a\u062d\u0648\u064a\u0644 {account_type} - {#####}",
+ "creation": "2025-12-14 00:27:45.821933",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "closing_date",
+  "account_type",
+  "column_break_v5cv9",
+  "mode_of_payment",
+  "from_account",
+  "receiving_account",
+  "section_break_tsylt",
+  "fetch_data",
+  "internal_transfer_transactions",
+  "section_break_ecgfo",
+  "day_total_amount"
+ ],
+ "fields": [
+  {
+   "description": "\u064a\u062c\u0628 \u0627\u0646 \u064a\u0648\u0627\u0641\u0642 \u062a\u0627\u0631\u064a\u062e \u0627\u063a\u0644\u0627\u0642 \u0627\u0644\u0645\u062d\u0644\u0627\u062a \u0644\u064a\u0648\u0645 \u0645\u0639\u064a\u0646",
+   "fieldname": "closing_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "\u062a\u0627\u0631\u064a\u062e \u0627\u063a\u0644\u0627\u0642 \u0627\u0644\u064a\u0648\u0645",
+   "reqd": 1
+  },
+  {
+   "fieldname": "account_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "\u0646\u0648\u0639 \u0627\u0644\u062e\u0632\u064a\u0646\u0629",
+   "options": "\n\u0646\u0642\u062f\u064a\n\u0628\u0637\u0627\u0642\u0629\n\u0628\u0637\u0627\u0642\u0629 \u0627\u0644\u062c\u0645\u0647\u0648\u0631\u064a\u0629\n\u0635\u0643",
+   "reqd": 1
+  },
+  {
+   "fieldname": "internal_transfer_transactions",
+   "fieldtype": "Table",
+   "label": "\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u062d\u0648\u0627\u0644\u0627\u062a",
+   "options": "Internal Transfer Transactions",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_v5cv9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "from_account",
+   "fieldtype": "Data",
+   "label": "\u0627\u0644\u062d\u0633\u0627\u0628 \u0627\u0644\u0645\u062d\u0648\u0644 \u0645\u0646\u0647",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "receiving_account",
+   "fieldtype": "Link",
+   "label": "\u0627\u0644\u062d\u0633\u0627\u0628 \u0627\u0644\u0645\u0633\u062a\u0644\u0645",
+   "options": "Account",
+   "read_only_depends_on": "eval: doc.account_type == \"\" || doc.account_type == \"\u0646\u0642\u062f\u064a\";",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_tsylt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_ecgfo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "day_total_amount",
+   "fieldtype": "Currency",
+   "label": "\u0627\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u064a\u0648\u0645 \u0644\u0644\u0645\u062d\u0644\u0627\u062a",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.account_type !== '' && doc.closing_date !== undefined;",
+   "fieldname": "fetch_data",
+   "fieldtype": "Button",
+   "label": "\u062c\u0644\u0628 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a"
+  },
+  {
+   "fieldname": "mode_of_payment",
+   "fieldtype": "Data",
+   "label": "\u0637\u0631\u064a\u0642\u0629 \u0627\u0644\u062f\u0641\u0639",
+   "read_only": 1,
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-12-14 05:42:10.965563",
+ "modified_by": "Administrator",
+ "module": "Frappe Advanced",
+ "name": "Internal Transfer",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
+}
